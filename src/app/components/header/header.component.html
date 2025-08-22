@@ -1,0 +1,32 @@
+<header class="header-container d-flex w-100 py-2 px-3">
+  <div class="ng-container w-100">
+    <div class="row d-flex align-items-center justify-content-between">
+      <div class="col-5">
+        <div class="knowledge-base">{{ titulo }}</div>
+      </div>
+      <div class="col-3 d-flex justify-content-center align-items-center">
+        <!--Dropdown Categoria-->
+        <mat-form-field appearance="fill">
+          <mat-label>Selecione uma categoria</mat-label>
+          <mat-select [(ngModel)]="selectedItemCategory" (selectionChange)="onChangeCategory($event.value)">
+            <mat-option *ngFor="let name of links" [value]="name">{{ name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-3 d-flex justify-content-center align-items-center">
+        <!--Tag-->
+        <mat-form-field appearance="fill">
+          <mat-label>Selecione uma categoria</mat-label>
+          <mat-select [(ngModel)]="selectedItemTag" (selectionChange)="onChangeTag($event.value)">
+            <mat-option *ngFor="let t of tg" [value]="t">{{ t }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!--(optionSelected)="selected($event)"-->
+      </div>
+      <div class="col-1 d-flex justify-content-center align-items-center">
+        <!--button Incluir-->
+        <button class="incluir-btn" (click)="abrirDialog()">Incluir</button>
+      </div>
+    </div>
+  </div>
+</header>

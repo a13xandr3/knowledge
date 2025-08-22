@@ -1,0 +1,22 @@
+.body {
+    height: 78vh;
+    max-height: 78vh;
+}
+
+.row {
+    border-bottom: 1px solid #c1bccd;
+}
+
+::ng-deep .mat-mdc-table .mdc-data-table__row {
+    //min-height: 45px;
+    height: 39px;
+    //max-height: 45px;
+}
+
+::ng-deep td:nth-child(4) {
+    display: block !important;
+    height: 39px !important;
+    overflow-y: auto !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+}
