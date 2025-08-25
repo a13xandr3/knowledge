@@ -43,17 +43,19 @@ export class HeaderComponent implements OnInit {
     });
   }
   onChangeCategory(value: string) {
-      this.selectedItemCategory = value+'_categoria';
-      this.itemSelecionadoEvent.emit(this.selectedItemCategory);
+    let categoriaValue = `${value}_categoria`;
+    this.selectedItemCategory = value;
+    this.itemSelecionadoEvent.emit(categoriaValue);
   }
   onChangeTag(value: string) {
-      this.selectedItemTag = value+'_tag';
-      this.itemSelecionadoEvent.emit(this.selectedItemTag);
+    let tagValue = `${value}_tag`;
+      this.selectedItemTag = value;
+      this.itemSelecionadoEvent.emit(tagValue);
   }
   abrirDialog() {
     const dialogRef = this.dialog.open(DialogContentComponent, {
       width: '100vw',
-      height: '98vh',
+      height: '100vh',
       data: {
         id: 0,
         name: '',
