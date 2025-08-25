@@ -7,16 +7,50 @@
     border-bottom: 1px solid #c1bccd;
 }
 
+::ng-deep  .mat-mdc-table tbody, 
+           .mat-mdc-table tfoot, 
+           .mat-mdc-table thead, 
+           .mat-mdc-cell, 
+           .mat-mdc-footer-cell, 
+           .mat-mdc-header-row, 
+           .mat-mdc-row, 
+           .mat-mdc-footer-row, 
+           .mat-mdc-table .mat-mdc-header-cell {
+    background: inherit;
+    height: 6vh;
+    max-height: 6vh;
+}
+
 ::ng-deep .mat-mdc-table .mdc-data-table__row {
     //min-height: 45px;
-    height: 39px;
+    height: 1.5rem;
     //max-height: 45px;
 }
 
+/*
 ::ng-deep td:nth-child(4) {
     display: block !important;
     height: 39px !important;
     overflow-y: auto !important;
     margin-top: 0 !important;
     padding: 0 !important;
+}
+*/
+
+::ng-deep td:nth-child(4) {
+    display: list-item !important;
+    height: 6vh !important;
+    overflow-y: auto !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+}
+
+::ng-deep .mat-mdc-chip-set .mdc-evolution-chip-set__chips {
+    min-width: 100%;
+    padding: 0.3rem 0 0 0 !important;
+    margin: 0 !important;
+}
+
+.actions, .tags {
+    cursor: pointer;
 }

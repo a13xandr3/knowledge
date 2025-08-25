@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { HomeService } from '../../../shared/services/home.service';
 import { ILinksResponse } from '../../../shared/response/response';
 import { Comportamento, ComportamentoService } from '../../../shared/services/comportamento.service';
@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogContentComponent } from '../dialog-content/dialog-content.component';
 import { IactionStatus, ILinkRequest } from 'src/shared/request/request';
 import { LinkStateService } from '../../../shared/state/link-state-service';
-import { Subject, takeUntil } from 'rxjs';
+import { concatMap, of, Subject, takeUntil, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,8 +16,9 @@ import arquivo from '../../../assets/data/arquivo.json';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   categoriaExcessao = arquivo.categoriaExcessao;
+  //@Output() itemSelecionadoEvent = new EventEmitter<string>();
   @Input() titulo!: string;
   itemModificadoCategoria: string = '';
   itemModificadoTag: string = '';
@@ -26,11 +27,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   comportamentos: Comportamento[] = [];
   pagedItems: ILinksResponse[] = [];
   displayedColumns: string[] = ['id','categoria', 'name', 'tag', 'actions'];
-  totalLinks = 0;
-  pageSize = 10;
-  pageIndex = 0;
+  totalLinks!: number;
+  pageSize!: number;
+  pageIndex!: number;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   private destroy$ = new Subject<void>();
+
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -39,10 +43,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private homeService: HomeService,
   ) {}
   ngOnInit(): void {
-    this.subscreverComportamentos();
-    this.subscreverAtualizacoes();
-    this.updatePagedItems(this.pageIndex, this.pageSize);
-    this.getLinks();
+    this.executarSequencia();
+    //this.subscreverComportamentos();
+    //this.subscreverAtualizacoes();
+    //this.resetPaginador();
+    //this.updatePagedItems(this.pageIndex, this.pageSize);
+    //this.getLinks();
   }
   ngAfterViewInit(): void {
   }
@@ -50,6 +56,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.getLinks();
+    
     this.updatePagedItems(event.pageIndex * event.pageSize, event.pageSize);
   }
   updatePagedItems(startIndex: number, pageSize: number) {
@@ -59,6 +66,36 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroy$.next();
     this.destroy$.complete();
   }
+  ngOnChanges(changes: SimpleChanges): void {
+      console.log(changes);
+  }
+  private executarSequencia(): void {
+    of(null).pipe(
+      tap(() => this.resetPaginador()),
+      concatMap(() => of(null).pipe(
+        tap(() => this.resetPaginador()),
+      )),
+      tap(() => this.subscreverComportamentos()),
+      concatMap(() => of(null).pipe(
+        tap(() => this.subscreverComportamentos()),
+      )),
+      tap(() => this.subscreverAtualizacoes()),
+      concatMap(() => of(null).pipe(
+        tap(() => this.subscreverAtualizacoes()),
+      )),
+      tap(() => this.updatePagedItems(this.pageIndex, this.pageSize)),
+      concatMap(() => of(null).pipe(
+        tap(() => this.updatePagedItems(this.pageIndex, this.pageSize)),
+      )),
+      tap(() => this.getLinks()),
+      concatMap(() => of(null).pipe(
+        tap(() => this.getLinks()),
+      ))
+    ).subscribe({
+      complete: () => console.log('sequencia completa')
+    });
+  }
+
   private subscreverComportamentos(): void {
     this.comportamentoService.comportamentos$
       .pipe(takeUntil(this.destroy$))
@@ -75,14 +112,23 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       });
   }
-  onItemSelecionado(itemSelecionado: string): void {
+
+  onChangeTag(event: PageEvent, value: any) {
+    this.pageIndex = event!.pageIndex;
+    this.pageSize = event!.pageSize;
+    let tagValue = `${value}`;
+    this.onItemSelecionado(tagValue);
+  }
+
+  onItemSelecionado(itemSelecionado: any): void {
     if ( itemSelecionado.split('_')[1].toString() === 'categoria' ) {
       this.itemModificadoCategoria = itemSelecionado.split('_')[0].toString();
       this.itemModificadoTag = '';
     } else {
       this.itemModificadoCategoria = '';
-      this.itemModificadoTag = itemSelecionado.split('_')[0].toString();;
+      this.itemModificadoTag = itemSelecionado.split('_')[0].toString();
     }
+    this.resetPaginador();
     this.getLinks();
   }
   getLinks(): void {
@@ -100,7 +146,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   abrirDialog(obj: IactionStatus, showSite?: boolean): void {
     const dialogRef = this.dialog.open(DialogContentComponent, {
-      width: '1200px',
+      width: '100vw',
+      height: '100vh',
       data: {
         id: obj.id,
         name: obj.name,
@@ -169,5 +216,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       return data.some(item => item.tags && Array.isArray(item.tags) && item.tags.length > 0);
     }
     return false;
+  }
+  resetPaginador(): void {
+    this.pageIndex = 0;
+    this.pageSize = 10;
+    this.totalLinks = 0;
+
+    if (this.paginator) {
+      this.paginator.firstPage();
+    }
+    
   }
 }

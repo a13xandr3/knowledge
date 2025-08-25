@@ -27,7 +27,7 @@
       <td mat-cell *matCellDef="let link">
         <mat-chip-listbox>
           <mat-chip *ngFor="let t of getTags(link.tag)">
-            {{ t}}
+            <span class="tags" (click)="onChangeTag($event, t+'_tag')">{{ t }}</span>
           </mat-chip>
         </mat-chip-listbox>
       </td>
@@ -38,13 +38,13 @@
       <th mat-header-cell *matHeaderCellDef class="col-1 text-end">Actions</th>
       <td mat-cell *matCellDef="let link" >
         <div class="d-flex gap-3 justify-content-end">
-            <span>
+            <span class="actions">
                 <a [href]="link.url" target="_blank" rel="noopener noreferrer">
                     <img src="../../assets/icos/search.svg" alt="Abre url externamente" >
                 </a>
             </span>
-            <span><img src="../../assets/icos/edit.svg" (click)="abrirDialog(link, false)" alt="Edit" ></span>
-            <span><img src="../../assets/icos/delete.svg" (click)="delete(link.id)" alt="Delete" ></span>
+            <span class="actions"><img src="../../assets/icos/edit.svg" (click)="abrirDialog(link, false)" alt="Edit" ></span>
+            <span class="actions"><img src="../../assets/icos/delete.svg" (click)="delete(link.id)" alt="Delete" ></span>
         </div>
       </td>
     </ng-container>
