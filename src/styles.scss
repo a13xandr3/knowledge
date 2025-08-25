@@ -1,5 +1,5 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";  /* required */
- @import "~bootstrap/dist/css/bootstrap.css";  /* optional for better look */
+@import "~bootstrap/dist/css/bootstrap.css";  /* optional for better look */
 
 @font-face {
   font-family: "poppins-regular";
@@ -13,9 +13,8 @@
   margin: 0;
   padding: 0;
   font-family: "poppins-regular" !important;
-  font-size: 0.89rem !important;
+  font-size: 0.86rem !important;
 }
-
 
 html,
 body {
@@ -75,3 +74,4 @@ html, body { height: 100%; }
 body { 
   margin: 0; 
 }
+
