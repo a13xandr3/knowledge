@@ -13,6 +13,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { DialogContentComponent } from './components/dialog-content/dialog-content.component';
 
 import { MatDialogModule } from '@angular/material/dialog';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -26,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,12 +55,12 @@ import { EditorModule } from '@tinymce/tinymce-angular';
     EditorModule,
     MatChipsModule,
     MatIconModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    NgxMaskDirective,
+    NgxMaskPipe
   ],
   exports: [],
-  providers: [
-    
-  ],
+  providers: [provideNgxMask()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

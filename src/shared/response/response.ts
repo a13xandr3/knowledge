@@ -6,4 +6,10 @@ export interface ILinksResponse {
     subCategoria: string;
     descricao: string;
     tag: Record<string, any>;
+    dataEntradaManha: string | null;
+    dataSaidaManha: string | null;
+    dataEntradaTarde: string | null;
+    dataSaidaTarde: string | null;
+    dataEntradaNoite: string | null;
+    dataSaidaNoite: string | null;
 }

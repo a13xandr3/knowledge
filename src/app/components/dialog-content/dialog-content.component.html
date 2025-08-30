@@ -34,8 +34,8 @@
             </mat-form-field>
             <mat-form-field 
               appearance="outline"
-              *ngIf="this.fr.get('categoria')?.value == 'TI' || this.fr.get('categoria')?.value == 'Ti' " 
-              [ngClass]="this.fr.get('categoria')?.value == 'TI' || this.fr.get('categoria')?.value == 'Ti' ? 'w-50' : 'w-100'" 
+              *ngIf="this.fr.get('categoria')?.value == 'TI' || this.fr.get('categoria')?.value == 'Ti' || this.fr.get('categoria')?.value == 'ti'"
+              [ngClass]="this.fr.get('categoria')?.value == 'TI' || this.fr.get('categoria')?.value == 'Ti' || this.fr.get('categoria')?.value == 'ti' ? 'w-50' : 'w-100'"
               >
               <mat-label>SubCategoria</mat-label>
               <input
@@ -47,7 +47,6 @@
             </mat-form-field>
           </div>
         </div>
-
         <div class="row">
           <div class="col-12 w-50">
             <mat-form-field appearance="outline" class="w-100">
@@ -68,31 +67,20 @@
             </mat-form-field>
           </div>
         </div>
-
         <div class="row">
-
           <div class="col-12 w-100">
-
             <mat-form-field 
               class="w-100 example-chip-list" 
               appearance="fill">
-
                 <mat-label>Lista de Tags</mat-label>
-
                 <mat-chip-grid #chipGrid aria-label="Preencha Tag">
-                  
                   <mat-chip-row *ngFor="let tag of ArrTags" (removed)="remove(tag)">
-                    
-                    {{tag}}
-
+                      {{tag}}
                     <button type="button" matChipRemove [attr.aria-label]="'remove ' + tag">
                       <mat-icon>X</mat-icon>
                     </button>
-
                   </mat-chip-row>
-
                 </mat-chip-grid>
-
                 <input 
                   placeholder="New tag" 
                   #tagInput 
@@ -102,33 +90,102 @@
                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                   (matChipInputTokenEnd)="add($event)"
                   />
-
                 <mat-autocomplete 
                   #auto="matAutocomplete" 
                   (optionSelected)="selected($event)">
-
                   <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
                     {{tag}}
                   </mat-option>
-
                 </mat-autocomplete>
-
             </mat-form-field>
-
           </div>
-
         </div>
-
+        <!--TimeSheet -- DATAS -->
+        <div
+          class="row" 
+          *ngIf="this.fr.get('categoria')?.value == 'TimeSheet' || 
+                 this.fr.get('categoria')?.value == 'timesheet' ">
+          <div class="col-12 w-16">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Data Entrada Manhã</mat-label>
+              <input 
+                matInput 
+                formControlName="dataEntradaManha"
+                title="Data de Entrada Período Manhã"
+                mask="d0/M0/0000 H0:m0:s0"
+                placeholder="dd/mm/aaaa hh:mm:ss"
+                >
+            </mat-form-field>
+          </div>
+          <div class="col-12 w-16">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Data Saída Manhã</mat-label>
+              <input 
+                matInput 
+                formControlName="dataSaidaManha"
+                title="Data de Saída Período Manhã"
+                mask="d0/M0/0000 H0:m0:s0"
+                placeholder="dd/mm/aaaa hh:mm:ss"
+                >
+            </mat-form-field>
+          </div>
+          <div class="col-12 w-16">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Data Entrada Tarde</mat-label>
+              <input 
+                matInput 
+                formControlName="dataEntradaTarde"
+                title="Data de Entrada Período Tarde"
+                mask="d0/M0/0000 H0:m0:s0"
+                placeholder="dd/mm/aaaa hh:mm:ss"
+                >
+            </mat-form-field>
+          </div>
+          <div class="col-12 w-16">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Data Saída Tarde</mat-label>
+              <input 
+                matInput 
+                formControlName="dataSaidaTarde"
+                title="Data de Saída Período Tarde"
+                mask="d0/M0/0000 H0:m0:s0"
+                placeholder="dd/mm/aaaa hh:mm:ss"
+                >
+            </mat-form-field>
+          </div>
+          <div class="col-12 w-16">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Data Entrada Noite</mat-label>
+              <input 
+                matInput 
+                formControlName="dataEntradaNoite"
+                title="Data de Entrada Período Noite"
+                mask="d0/M0/0000 H0:m0:s0"
+                placeholder="dd/mm/aaaa hh:mm:ss"
+                >
+            </mat-form-field>
+          </div>
+          <div class="col-12 w-16">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Data Saída Noite</mat-label>
+              <input 
+                matInput 
+                formControlName="dataSaidaNoite"
+                title="Data de Saída Período Noite"
+                mask="d0/M0/0000 H0:m0:s0"
+                placeholder="dd/mm/aaaa hh:mm:ss"
+                >
+            </mat-form-field>
+          </div>
+        </div>
         <div class="row" *ngIf="!showSite">
           <div class="col-12 w-100" >
             <!-- apiKey="wjhk6xg9dnu9q26sgcnopb1cjb4bc4pr7gfe7b9j6jxo6xts" -->
-
             <editor 
               apiKey="wjhk6xg9dnu9q26sgcnopb1cjb4bc4pr7gfe7b9j6jxo6xts" 
               [init]="init" 
               formControlName="descricao"
             />
-
           </div>
         </div>
         <div class="row">

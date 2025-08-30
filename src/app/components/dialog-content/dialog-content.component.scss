@@ -113,7 +113,7 @@ form {
     align-items: center !important;
     //display: flex !important;
     padding: 0 0 0 0 !important;
-    font-size: 0.85rem !important;
+    font-size: 0.85rem;
 }
 
 :host .mat-mdc-dialog-content {
@@ -126,4 +126,10 @@ form {
     height: 100vh !important;
 }
 
+.w-16 {
+    width: 16.6% !important;
+}
 
+::ng-deep .mdc-text-field__input {
+    font-size: 0.82rem !important;
+}

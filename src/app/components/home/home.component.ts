@@ -1,16 +1,27 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { HomeService } from '../../../shared/services/home.service';
-import { ILinksResponse } from '../../../shared/response/response';
-import { Comportamento, ComportamentoService } from '../../../shared/services/comportamento.service';
+import { 
+  AfterViewInit, 
+  Component, 
+  Input, 
+  OnChanges, 
+  OnDestroy, 
+  OnInit, 
+  SimpleChanges, 
+  ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogContentComponent } from '../dialog-content/dialog-content.component';
-import { IactionStatus, ILinkRequest } from 'src/shared/request/request';
-import { LinkStateService } from '../../../shared/state/link-state-service';
-import { concatMap, of, Subject, takeUntil, tap } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { concatMap, of, Subject, takeUntil, tap } from 'rxjs';
+
+import { IactionStatus } from 'src/shared/request/request';
+import { LinkStateService } from '../../../shared/state/link-state-service';
+import { HomeService } from '../../../shared/services/home.service';
+import { Comportamento, ComportamentoService } from '../../../shared/services/comportamento.service';
+import { ILinksResponse } from '../../../shared/response/response';
+
 import arquivo from '../../../assets/data/arquivo.json';
+import { DialogContentComponent } from '../dialog-content/dialog-content.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -18,7 +29,6 @@ import arquivo from '../../../assets/data/arquivo.json';
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   categoriaExcessao = arquivo.categoriaExcessao;
-  //@Output() itemSelecionadoEvent = new EventEmitter<string>();
   @Input() titulo!: string;
   itemModificadoCategoria: string = '';
   itemModificadoTag: string = '';
@@ -30,7 +40,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   totalLinks!: number;
   pageSize!: number;
   pageIndex!: number;
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   private destroy$ = new Subject<void>();
@@ -44,11 +53,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   ) {}
   ngOnInit(): void {
     this.executarSequencia();
-    //this.subscreverComportamentos();
-    //this.subscreverAtualizacoes();
-    //this.resetPaginador();
-    //this.updatePagedItems(this.pageIndex, this.pageSize);
-    //this.getLinks();
   }
   ngAfterViewInit(): void {
   }
@@ -95,7 +99,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
       complete: () => console.log('sequencia completa')
     });
   }
-
   private subscreverComportamentos(): void {
     this.comportamentoService.comportamentos$
       .pipe(takeUntil(this.destroy$))
@@ -112,14 +115,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
         }
       });
   }
-
   onChangeTag(event: PageEvent, value: any) {
     this.pageIndex = event!.pageIndex;
     this.pageSize = event!.pageSize;
     let tagValue = `${value}`;
     this.onItemSelecionado(tagValue);
   }
-
   onItemSelecionado(itemSelecionado: any): void {
     if ( itemSelecionado.split('_')[1].toString() === 'categoria' ) {
       this.itemModificadoCategoria = itemSelecionado.split('_')[0].toString();
@@ -134,6 +135,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   getLinks(): void {
     this.homeService.getLinks(this.pageIndex, this.pageSize, this.categoriaExcessao, this.itemModificadoCategoria, this.itemModificadoTag).subscribe({
       next: (response: any) => {
+        //console.log('response-get-links==> ',response);
         let lnk = response.atividades;
           lnk.sort((a: any, b: any) => a.name.localeCompare(b?.name));
           this.links = lnk;
@@ -146,7 +148,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   }
   abrirDialog(obj: IactionStatus, showSite?: boolean): void {
     const dialogRef = this.dialog.open(DialogContentComponent, {
-      width: '100vw',
+      width: '200vw',
       height: '100vh',
       data: {
         id: obj.id,
@@ -158,7 +160,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
         tag: [obj.tag],
         subCategoria: obj.subCategoria,
         oldCategoria: obj.categoria,
-        showSite: showSite
+        showSite: showSite,
+        dataEntradaManha: obj.dataEntradaManha,
+        dataSaidaManha: obj.dataSaidaManha,
+        dataEntradaTarde: obj.dataEntradaTarde,
+        dataSaidaTarde: obj.dataSaidaTarde,
+        dataEntradaNoite: obj.dataEntradaNoite,
+        dataSaidaNoite: obj.dataSaidaNoite
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -221,10 +229,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     this.pageIndex = 0;
     this.pageSize = 10;
     this.totalLinks = 0;
-
     if (this.paginator) {
       this.paginator.firstPage();
     }
-    
   }
 }

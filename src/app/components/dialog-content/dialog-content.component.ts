@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { 
   AfterViewInit, 
   Component, 
@@ -6,6 +7,7 @@ import {
   NgZone, 
   OnDestroy, 
   OnInit, 
+  Optional, 
   ViewChild } from '@angular/core';
 import { FormBuilder, FormControl,  FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -23,13 +25,12 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-export interface Fruit {
-  name: string;
-}
+
 @Component({
   selector: 'app-dialog-content',
   templateUrl: './dialog-content.component.html',
-  styleUrls: ['./dialog-content.component.scss']
+  styleUrls: ['./dialog-content.component.scss'],
+  providers: [DatePipe]
 })
 export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy {
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -40,11 +41,11 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
   init: EditorComponent['init'] = {
     plugins: [
-      // Core editing features
-      'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
-      // Your account includes a free trial of TinyMCE premium features
-      // Try the most popular premium features until Aug 30, 2025:
-      'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'ai', 'uploadcare', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
+      'accordion', 'anchor', 'autolink', 'autoresize', 'autosave', 'charmap', 
+      'code', 'codesample', 'directionality', 'emoticons', 'fullscreen', 'help',
+      'image', 'importcss', 'insertDateTime', 'link', 'lists', 'media', 'listStyles', 
+      'media', 'nonbreakingspace', 'pageBreak', 'preview', 'quicktoolbars', 'save', 
+      'searchreplace', 'table', 'visualblocks', 'visualCharacters', 'wordcount',
     ],
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography uploadcare | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
     tinycomments_mode: 'embedded',
@@ -58,6 +59,17 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
     file_picker_callback: (callback, value, meta) => {
     },    
   }
+  /*
+      // Your account includes a free trial of TinyMCE premium features
+      // Try the most popular premium features until Aug 30, 2025:
+      'checklist', 'mediaembed', 'casechange', 'formatpainter', 
+      'pageembed', 'a11ychecker', 'tinymcespellchecker', 
+      'permanentpen', 'powerpaste', 'advtable', 'advcode', 
+      'advtemplate', 'ai', 'uploadcare', 'mentions', 'tinycomments', 
+      'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 
+      'typography', 'inlinecss', 'markdown','importword', 
+      'exportword', 'exportpdf'
+  */
   fr: FormGroup;
   showSite = false;
   exibeSite: any;
@@ -66,14 +78,18 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
   constructor(
     private service: HomeService,
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
     private snackBar: MatSnackBar,
     private dialogRef: MatDialogRef<DialogContentComponent>,
     private sanitizer: DomSanitizer,
     private linkStateService: LinkStateService,
-    private zone: NgZone
+    private zone: NgZone,
+    private datePipe: DatePipe
   ) 
   {
+    
+    console.log('data janela ==> ', data);
+
     this.showSite = data.showSite;
     this.fr = this.fb.group({
       id: [{ value: data?.id || '', disabled: true }],
@@ -84,7 +100,13 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       descricao: [data?.descricao],
       tg: '',
       oldCategoria: [data?.oldCategoria],
-      status: ['']
+      status: [''],
+      dataEntradaManha: [this.datePipe.transform(data?.dataEntradaManha, 'dd/MM/yyyy HH:mm:ss')],
+      dataSaidaManha: [this.datePipe.transform(data?.dataSaidaManha, 'dd/MM/yyyy HH:mm:ss')],
+      dataEntradaTarde: [this.datePipe.transform(data?.dataEntradaTarde, 'dd/MM/yyyy HH:mm:ss')],
+      dataSaidaTarde: [this.datePipe.transform(data?.dataSaidaTarde, 'dd/MM/yyyy HH:mm:ss')],
+      dataEntradaNoite: [this.datePipe.transform(data?.dataEntradaNoite, 'dd/MM/yyyy HH:mm:ss')],
+      dataSaidaNoite: [this.datePipe.transform(data?.dataSaidaNoite, 'dd/MM/yyyy HH:mm:ss')]
     });
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(null),
@@ -175,7 +197,13 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       categoria: request.categoria != null ? this.toTitleCase(request.categoria) : '',
       subCategoria: request.subCategoria != null ? this.toTitleCase(request.subCategoria) : '',
       descricao: request.descricao,
-      tag: {"tags": this.ArrTags}
+      tag: {"tags": this.ArrTags},
+      dataEntradaManha: this.ISODate(request?.dataEntradaManha),
+      dataSaidaManha: this.ISODate(request?.dataSaidaManha),
+      dataEntradaTarde: this.ISODate(request?.dataEntradaTarde),
+      dataSaidaTarde: this.ISODate(request?.dataSaidaTarde),
+      dataEntradaNoite: this.ISODate(request?.dataEntradaNoite),
+      dataSaidaNoite: this.ISODate(request?.dataSaidaNoite)
     }
     this.service.postLink(auxRequest).subscribe({
       next: ((resp: any) => {
@@ -188,6 +216,14 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       })
     })
   }
+  ISODate(dt: any): any {
+    if ( dt === null || dt === '' ) return null;
+    const [datePart, timePart] = dt.split(' ');
+    const [day, month, year] = datePart.split('/');
+    const [hour, minute, second] = timePart.split(':');
+    const dtNew = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.padStart(2, '0')}:${minute.padStart(2, '0')}:${(second || '00').padStart(2, '0')}`;
+    return dtNew;
+  }
   putAtualizar(request: ILinkRequest): void {
     const auxRequest = {
       id: request.id,
@@ -197,7 +233,12 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       subCategoria: request.subCategoria != null ? this.toTitleCase(request.subCategoria) : '',
       descricao: request.descricao,
       tag: {"tags": this.ArrTags},
-      oldCategoria: request.oldCategoria
+      dataEntradaManha: this.ISODate(request?.dataEntradaManha),
+      dataSaidaManha: this.ISODate(request?.dataSaidaManha),
+      dataEntradaTarde: this.ISODate(request?.dataEntradaTarde),
+      dataSaidaTarde: this.ISODate(request?.dataSaidaTarde),
+      dataEntradaNoite: this.ISODate(request?.dataEntradaNoite),
+      dataSaidaNoite: this.ISODate(request?.dataSaidaNoite)
     }
     this.service.putLink(auxRequest)?.subscribe({
       next: ((resp: any) => {
@@ -225,8 +266,8 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
     event.chipInput!.clear();
     this.tagCtrl.setValue(null);
   }
-  remove(fruit: string): void {
-    const index = this.ArrTags.indexOf(fruit);
+  remove(chip: string): void {
+    const index = this.ArrTags.indexOf(chip);
     if (index >= 0) {
       this.ArrTags.splice(index, 1);
     }

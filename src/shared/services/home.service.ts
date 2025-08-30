@@ -69,6 +69,12 @@ export class HomeService {
       categoria: request.categoria,
       subCategoria: request.subCategoria,
       descricao: request.descricao,
+      dataEntradaManha: request.dataEntradaManha,
+      dataSaidaManha: request.dataSaidaManha,
+      dataEntradaTarde: request.dataEntradaTarde,
+      dataSaidaTarde: request.dataSaidaTarde,
+      dataEntradaNoite: request.dataEntradaNoite,
+      dataSaidaNoite: request.dataSaidaNoite
     }
     return this.http.post<void>(`${this.url}`, auxRequest, {
       headers: { 'Content-Type': 'application/json' }
@@ -81,7 +87,13 @@ export class HomeService {
       categoria: request.categoria,
       subCategoria: request.subCategoria,
       descricao: request.descricao,
-      tag: request.tag
+      tag: request.tag,
+      dataEntradaManha: request.dataEntradaManha,
+      dataSaidaManha: request.dataSaidaManha,
+      dataEntradaTarde: request.dataEntradaTarde,
+      dataSaidaTarde: request.dataSaidaTarde,
+      dataEntradaNoite: request.dataEntradaNoite,
+      dataSaidaNoite: request.dataSaidaNoite
     }
     return this.http.post<void>(`${this.url}`, auxRequest);
   }

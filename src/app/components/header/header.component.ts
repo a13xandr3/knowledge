@@ -24,10 +24,11 @@ function isTagObject(v: any): v is { tags: unknown } {
 export class HeaderComponent implements OnInit {
   @Output() itemSelecionadoEvent = new EventEmitter<string>();
   @Input() titulo!: string;
-  public links: string[] = [];
-  public tg: string[] = [];
-  public selectedItemCategory: string = '';
-  public selectedItemTag: string = '';
+  links: string[] = [];
+  tg: string[] = [];
+  selectedItemCategory: string = '';
+  selectedItemTag: string = '';
+  dataHoraAtual!: string;
   constructor(
     private homeService: HomeService,
     private linkStateService: LinkStateService,
@@ -35,6 +36,7 @@ export class HeaderComponent implements OnInit {
       this.linkStateService.triggerRefresh();
     }
   ngOnInit(): void {
+    this.brDate();
     this.getCategories();
     this.getTags();
     this.linkStateService.refreshLink$.subscribe(() => {
@@ -52,6 +54,26 @@ export class HeaderComponent implements OnInit {
       this.selectedItemTag = value;
       this.itemSelecionadoEvent.emit(tagValue);
   }
+  ISODate(dt: any): any {
+    if ( dt === null || dt === '' ) return null;
+    const [datePart, timePart] = dt.split(' ');
+    const [day, month, year] = datePart.split('/');
+    const [hour, minute, second] = timePart.split(':');
+    const dtNew = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.padStart(2, '0')}:${minute.padStart(2, '0')}:${(second || '00').padStart(2, '0')}`;
+    return dtNew;
+  }
+  private brDate(): void {
+    const dataHoraAtual = new Date();
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const dia = pad(dataHoraAtual.getDate());
+    const mes = pad(dataHoraAtual.getMonth() + 1); // mês começa em 0
+    const ano = dataHoraAtual.getFullYear();
+    const hora = pad(dataHoraAtual.getHours());
+    const minuto = pad(dataHoraAtual.getMinutes());
+    const segundo = pad(dataHoraAtual.getSeconds());
+    const formatado = `${dia}/${mes}/${ano} ${hora}:${minuto}:${segundo}`;
+    this.dataHoraAtual = formatado;
+  }
   abrirDialog() {
     const dialogRef = this.dialog.open(DialogContentComponent, {
       width: '100vw',
@@ -63,6 +85,12 @@ export class HeaderComponent implements OnInit {
         status: 'inclusao',
         categoria: '',
         descricao: '',
+        dataEntradaManha: this.ISODate(this.dataHoraAtual),
+        dataSaidaManha: this.ISODate(this.dataHoraAtual),
+        dataEntradaTarde: this.ISODate(this.dataHoraAtual),
+        dataSaidaTarde: this.ISODate(this.dataHoraAtual),
+        dataEntradaNoite: this.ISODate(this.dataHoraAtual),
+        dataSaidaNoite: this.ISODate(this.dataHoraAtual)
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
