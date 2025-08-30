@@ -39,6 +39,7 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
   ArrTags: string[] = [];
   allTags: string[] = [];
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
+  //** TinyMCE configuration */
   init: EditorComponent['init'] = {
     plugins: [
       'accordion', 'anchor', 'autolink', 'autoresize', 'autosave', 'charmap', 
@@ -50,16 +51,21 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography uploadcare | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
     tinycomments_mode: 'embedded',
     tinycomments_author: 'Alexandre Esteves',
-    mergetags_list: [
-      { value: 'First.Name', title: 'First Name' },
-      { value: 'Email', title: 'Email' },
-    ],
-    ai_request: (request: any, respondWith: any) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
     uploadcare_public_key: 'a08bc755cbb5572c8fac',
-    file_picker_callback: (callback, value, meta) => {
-    },    
+    skin: 'oxide-dark',
+    selector: 'textarea',
+    min_height: 435,
+    max_height: 800
   }
+
   /*
+  mergetags_list: [
+    { value: 'First.Name', title: 'First Name' },
+    { value: 'Email', title: 'Email' },
+  ],
+  file_picker_callback: (callback, value, meta) => {
+  },
+  ai_request: (request: any, respondWith: any) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
       // Your account includes a free trial of TinyMCE premium features
       // Try the most popular premium features until Aug 30, 2025:
       'checklist', 'mediaembed', 'casechange', 'formatpainter', 
@@ -70,6 +76,7 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       'typography', 'inlinecss', 'markdown','importword', 
       'exportword', 'exportpdf'
   */
+
   fr: FormGroup;
   showSite = false;
   exibeSite: any;
@@ -140,9 +147,7 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     return false;
   }
-  ngOnInit(): void {
-    //this.teste();
-  }
+  ngOnInit(): void {}
   async ngAfterViewInit() {
   }
   ngOnDestroy(): void {
@@ -198,12 +203,12 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       subCategoria: request.subCategoria != null ? this.toTitleCase(request.subCategoria) : '',
       descricao: request.descricao,
       tag: {"tags": this.ArrTags},
-      dataEntradaManha: this.ISODate(request?.dataEntradaManha),
-      dataSaidaManha: this.ISODate(request?.dataSaidaManha),
-      dataEntradaTarde: this.ISODate(request?.dataEntradaTarde),
-      dataSaidaTarde: this.ISODate(request?.dataSaidaTarde),
-      dataEntradaNoite: this.ISODate(request?.dataEntradaNoite),
-      dataSaidaNoite: this.ISODate(request?.dataSaidaNoite)
+      dataEntradaManha: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataEntradaManha) : null,
+      dataSaidaManha: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataSaidaManha) : null,
+      dataEntradaTarde: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataEntradaTarde) : null,
+      dataSaidaTarde: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataSaidaTarde) : null,
+      dataEntradaNoite: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataEntradaNoite) : null,
+      dataSaidaNoite: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataSaidaNoite) : null
     }
     this.service.postLink(auxRequest).subscribe({
       next: ((resp: any) => {
@@ -233,12 +238,12 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       subCategoria: request.subCategoria != null ? this.toTitleCase(request.subCategoria) : '',
       descricao: request.descricao,
       tag: {"tags": this.ArrTags},
-      dataEntradaManha: this.ISODate(request?.dataEntradaManha),
-      dataSaidaManha: this.ISODate(request?.dataSaidaManha),
-      dataEntradaTarde: this.ISODate(request?.dataEntradaTarde),
-      dataSaidaTarde: this.ISODate(request?.dataSaidaTarde),
-      dataEntradaNoite: this.ISODate(request?.dataEntradaNoite),
-      dataSaidaNoite: this.ISODate(request?.dataSaidaNoite)
+      dataEntradaManha: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataEntradaManha) : null,
+      dataSaidaManha: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataSaidaManha) : null,
+      dataEntradaTarde: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataEntradaTarde) : null,
+      dataSaidaTarde: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataSaidaTarde) : null,
+      dataEntradaNoite: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataEntradaNoite) : null,
+      dataSaidaNoite: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataSaidaNoite) : null
     }
     this.service.putLink(auxRequest)?.subscribe({
       next: ((resp: any) => {
