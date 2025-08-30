@@ -28,13 +28,15 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { TinymceComponent } from '../shared/tinymce/tinymce.component';
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HeaderComponent,
     FooterComponent,
-    DialogContentComponent
+    DialogContentComponent,
+    TinymceComponent
   ],
   imports: [
     BrowserModule,
