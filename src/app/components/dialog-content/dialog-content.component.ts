@@ -32,14 +32,21 @@ import { ILinkRequest } from 'src/shared/request/request';
 })
 export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy {
   separatorKeysCodes: number[] = [ENTER, COMMA];  //chip
-  tagCtrl = new FormControl('');
-  filteredTags!: Observable<string[]>;
-  ArrTags: string[] = [];                         //tags
-  allTags: string[] = [];
   
-  descricao: any;
+  ArrTags: string[] = [];                         //Tags
+  allTags: string[] = [];                         //Tags
+  filteredTags!: Observable<string[]>;            //Tags
+  tagCtrl = new FormControl('');                  //Tags
+  
+  ArrUris: string[] = [];                          //Uri
+  allUris: string[] = [];                          //Uri
+  filteredUris!: Observable<string[]>;             //Uri
+  uriCtrl = new FormControl('');                   //Uri
+
+  //descricao: any;
 
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('uriInput') uriInput!: ElementRef<HTMLInputElement>;
 
   fr: FormGroup;
   showSite = false;
@@ -61,7 +68,8 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
     this.fr = this.fb.group({
       id: [{ value: data?.id || '', disabled: true }],
       name: [data?.name],
-      url: [{ value: data?.url, disabled: false}],
+      url: [{ value: data?.url, disabled: false }],
+      uri: [{ value: data?.uri, disabled: false }],
       categoria: [data?.categoria],
       subCategoria: [data?.subCategoria],
       descricao: [data?.descricao || ''],
@@ -75,9 +83,26 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       dataEntradaNoite: [this.datePipe.transform(data?.dataEntradaNoite, 'dd/MM/yyyy HH:mm:ss')],
       dataSaidaNoite: [this.datePipe.transform(data?.dataSaidaNoite, 'dd/MM/yyyy HH:mm:ss')]
     });
+
+
+    //** URI */
+    this.filteredUris = this.uriCtrl.valueChanges.pipe(
+      startWith(null),
+      map((uri: string | null) => (uri ? this._filterUri(uri) : this.allUris.slice())),
+    );
+    if ( this.hasUri( this.data.uri ) ) {
+      data.uri[0].uris.forEach((r: any) => {
+        this.ArrUris.push(r);
+      });
+    } else {
+      console.log('Nenhuma tag encontrada');
+    }
+
+
+    //** TAGS */
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(null),
-      map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice())),
+      map((tag: string | null) => (tag ? this._filterTag(tag) : this.allTags.slice())),
     );
     if ( this.hasTags( this.data.tag ) ) {
       data.tag[0].tags.forEach((r: any) => {
@@ -87,6 +112,27 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       console.log('Nenhuma tag encontrada');
     }
   }
+  /**
+   * Verifica se existe ao menos uma tag válida no objeto recebido.
+   * @param data qualquer retorno do backend
+   * @returns boolean indicando se existem tags
+   */
+  hasUri(data: any): boolean {
+    if( !data ) {
+      return false;
+    }
+    //case seja objeto unico
+    if ( !Array.isArray(data) && Array.isArray(data.uris)) {
+      return data.uris.length > 0;
+    }
+    // caso seja array de objetos [ {tags: [] }]
+    if ( Array.isArray(data) ) {
+      return data.some(item => item.uris && Array.isArray(item.uris) && item.uris.length > 0);
+    }
+    return false;
+  }
+
+
   /**
    * Verifica se existe ao menos uma tag válida no objeto recebido.
    * @param data qualquer retorno do backend
@@ -102,7 +148,6 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     // caso seja array de objetos [ {tags: [] }]
     if ( Array.isArray(data) ) {
-      let x = data.some(item => item.tags && Array.isArray(item.tags) && item.tags.length > 0); 
       return data.some(item => item.tags && Array.isArray(item.tags) && item.tags.length > 0);
     }
     return false;
@@ -112,6 +157,7 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   ngOnDestroy(): void {
   }
+  /*
   geraThumb(): void {
     this.service.getThumbs().subscribe({
       next: (data: any) => {
@@ -133,6 +179,7 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     })
   }
+  */
   fechar() {
     this.dialogRef.close();
   }
@@ -149,16 +196,17 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   toTitleCase(str: string): string {
     return str
-      .toLowerCase() // deixa tudo minúsculo primeiro (opcional, mas comum)
-      .split(' ')    // separa em palavras
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // primeira letra maiúscula
-      .join(' ');    // junta de novo
+      .toLowerCase()                                              // deixa tudo minúsculo primeiro (opcional, mas comum)
+      .split(' ')                                                 // separa em palavras
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))  // primeira letra maiúscula
+      .join(' ');                                                 // junta de novo
   }
   postSalvar(request: ILinkRequest): void {
     const auxRequest = {
       id: request.id,
       name: request.name,
       url: request.url,
+      uri: {"uris": this.ArrUris},
       categoria: request.categoria != null ? this.toTitleCase(request.categoria) : '',
       subCategoria: request.subCategoria != null ? this.toTitleCase(request.subCategoria) : '',
       descricao: request.descricao,
@@ -194,6 +242,7 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       id: request.id,
       name: request.name,
       url: request.url,
+      uri: {"uris": this.ArrUris},
       categoria: request.categoria != null ? this.toTitleCase(request.categoria) : '',
       subCategoria: request.subCategoria != null ? this.toTitleCase(request.subCategoria) : '',
       descricao: request.descricao,
@@ -217,12 +266,16 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   mostrarMensagem(msg: string): void {
     this.snackBar.open(msg, 'Fechar', {
-      duration: 5000, // em milissegundos
-      verticalPosition: 'top',   // ou 'bottom'
-      horizontalPosition: 'right' // ou 'left', 'center'
+      duration: 5000,                 // em milissegundos
+      verticalPosition: 'top',        // ou 'bottom'
+      horizontalPosition: 'right'     // ou 'left', 'center'
     });
   }
-  add(event: MatChipInputEvent): void {
+
+
+
+  //** TAG */
+  addTag(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     if (value) {
       this.ArrTags.push(value);
@@ -231,19 +284,48 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
     event.chipInput!.clear();
     this.tagCtrl.setValue(null);
   }
-  remove(chip: string): void {
+  removeTag(chip: string): void {
     const index = this.ArrTags.indexOf(chip);
     if (index >= 0) {
       this.ArrTags.splice(index, 1);
     }
   }
-  selected(event: MatAutocompleteSelectedEvent): void {
+  tagSelected(event: MatAutocompleteSelectedEvent): void {
     this.ArrTags.push(event.option.viewValue);
     this.tagInput.nativeElement.value = '';
     this.tagCtrl.setValue(null);
   }
-  private _filter(value: string): string[] {
+  private _filterTag(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.allTags.filter(tag => tag.toLowerCase().includes(filterValue));
   }
+
+
+
+  //** URI */
+  addUri(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    if (value) {
+      this.ArrUris.push(value);
+    }
+    // Clear the input value
+    event.chipInput!.clear();
+    this.uriCtrl.setValue(null);
+  }
+  removeUri(chip: string): void {
+    const index = this.ArrUris.indexOf(chip);
+    if (index >= 0) {
+      this.ArrUris.splice(index, 1);
+    }
+  }
+  uriSelected(event: MatAutocompleteSelectedEvent): void {
+    this.ArrUris.push(event.option.viewValue);
+    this.uriInput.nativeElement.value = '';
+    this.uriCtrl.setValue(null);
+  }
+  private _filterUri(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.allUris.filter(uri => uri.toLowerCase().includes(filterValue));
+  }
+
 }

@@ -28,7 +28,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-import { TinymceComponent } from '../shared/tinymce/tinymce.component';
+import { TinymceComponent } from '../shared/components/tinymce/tinymce.component';
+import { MatChipsComponent } from '../shared/components/mat-chips/mat-chips.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +37,8 @@ import { TinymceComponent } from '../shared/tinymce/tinymce.component';
     HeaderComponent,
     FooterComponent,
     DialogContentComponent,
-    TinymceComponent
+    TinymceComponent,
+    MatChipsComponent
   ],
   imports: [
     BrowserModule,

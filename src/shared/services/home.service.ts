@@ -15,6 +15,7 @@ export class HomeService {
   constructor(
     private http: HttpClient,
   ) { }
+  /*
   _carregarConteudo(urlTarget: string): any {
     let retorno;
     this.http.get(`${this.urlBrowser}?url=${urlTarget}`, { responseType: 'text' })
@@ -24,15 +25,18 @@ export class HomeService {
     });
     return retorno;
   }
+  */
   carregaConteudo(urlTarget: string): Observable<any> {
     return this.http.get(`${this.urlBrowser}?url=${urlTarget}`, { responseType: 'text' });
   }
+  /*
   getThumbs(): Observable<any> {
-    // let image = 'https://www.triumph.com.br';
-    let image = 'https://www.clubeintima.com.br'
+    // let image = '';
+    let image = ''
     let params = new HttpParams().set('url', image);
     return this.http.post<any>('http://localhost:8081/api/fxpreview', {}, { params });
   }
+  */
   getLinks(pageIndex: number, pageSize: number, excessao: any[], categoria: string, tag: string): Observable<{ links: ILinksResponse[]; total: number }> {
     let params = new HttpParams()
     .set('page', pageIndex.toString())

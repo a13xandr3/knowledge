@@ -1,28 +1,27 @@
 <mat-dialog-content>
+
   <div class="container-fluid w-100 body">
-    <div class="row">
+
+      <form [formGroup]="fr" (ngSubmit)="salvar()" class="form-layout">
+
+        <div class="row">
           <div class="col-12">
             <h2 mat-dialog-title class="dialog-title knowledge-base">
               {{ data.status === 'inclusao' ? 'Inclusão' : 'Alteração' }}
+              {{ data.status !== 'inclusao' ? ' - ID: ' + this.fr.get('id')?.value : '' }}
             </h2>
           </div>
-    </div>
-      <form [formGroup]="fr" (ngSubmit)="salvar()" class="form-layout">
+        </div>
+
         <div class="row">
-          <div class="col-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Id</mat-label>
-              <input matInput 
-                     formControlName="id" 
-                     disabled 
-                     title="id">
-            </mat-form-field>
-          </div>
+          
+          <!-- Categoria e sub-Categoria -->
           <div class="d-flex col-6 gap-1">
             <!-- Categoria com autocomplete editável -->
             <mat-form-field 
               appearance="outline" 
-              [ngClass]="this.fr.get('categoria')?.value == 'TI' || this.fr.get('categoria')?.value == 'Ti' ? 'w-50' : 'w-100'" 
+              [class]="this.fr.get('categoria')?.value == 'TI' || 
+                         this.fr.get('categoria')?.value == 'Ti' ? 'w-50' : 'w-100'" 
               >
               <mat-label>Categoria</mat-label>
               <input
@@ -35,7 +34,7 @@
             <mat-form-field 
               appearance="outline"
               *ngIf="this.fr.get('categoria')?.value == 'TI' || this.fr.get('categoria')?.value == 'Ti' || this.fr.get('categoria')?.value == 'ti'"
-              [ngClass]="this.fr.get('categoria')?.value == 'TI' || this.fr.get('categoria')?.value == 'Ti' || this.fr.get('categoria')?.value == 'ti' ? 'w-50' : 'w-100'"
+              [class]="this.fr.get('categoria')?.value == 'TI' || this.fr.get('categoria')?.value == 'Ti' || this.fr.get('categoria')?.value == 'ti' ? 'w-50' : 'w-100'"
               >
               <mat-label>SubCategoria</mat-label>
               <input
@@ -46,27 +45,41 @@
               >
             </mat-form-field>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-12 w-50">
+
+          <!-- Nome -->
+          <div class="col-6">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Nome</mat-label>
               <input matInput 
-                     formControlName="name" 
-                     title="nome">
-            </mat-form-field>
-          </div>
-          <div class="col-12 w-50">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Link</mat-label>
-              <input 
-                matInput 
-                formControlName="url"
-                title="lnk"
-                >
+                    formControlName="name" 
+                    title="nome">
             </mat-form-field>
           </div>
         </div>
+        
+        <!-- Uri e URL -->
+        <div class="row">
+          
+          <div class="col-6">
+
+          </div>
+                    
+          <div class="col-6">
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Link</mat-label>
+                <input 
+                  matInput 
+                  formControlName="url"
+                  title="lnk"
+                  >
+              </mat-form-field>
+
+          </div>
+
+        </div>
+
+        <!-- Tags -->
         <div class="row">
           <div class="col-12 w-100">
             <mat-form-field 
@@ -74,7 +87,7 @@
               appearance="fill">
                 <mat-label>Lista de Tags</mat-label>
                 <mat-chip-grid #chipGrid aria-label="Preencha Tag">
-                  <mat-chip-row *ngFor="let tag of ArrTags" (removed)="remove(tag)">
+                  <mat-chip-row *ngFor="let tag of ArrTags" (removed)="removeTag(tag)">
                       {{tag}}
                     <button type="button" matChipRemove [attr.aria-label]="'remove ' + tag">
                       <mat-icon>X</mat-icon>
@@ -88,11 +101,11 @@
                   [matChipInputFor]="chipGrid" 
                   [matAutocomplete]="auto"
                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                  (matChipInputTokenEnd)="add($event)"
+                  (matChipInputTokenEnd)="addTag($event)"
                   />
                 <mat-autocomplete 
                   #auto="matAutocomplete" 
-                  (optionSelected)="selected($event)">
+                  (optionSelected)="tagSelected($event)">
                   <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
                     {{tag}}
                   </mat-option>
@@ -100,6 +113,8 @@
             </mat-form-field>
           </div>
         </div>
+
+
         <!--TimeSheet -- DATAS -->
         <div
           class="row" 
@@ -178,11 +193,15 @@
             </mat-form-field>
           </div>
         </div>
+
+        <!-- Descricao -->
         <div class="row" *ngIf="!showSite">
           <div class="col-12 w-100" >
-            <app-tinymce formControlName="descricao" ></app-tinymce>
+            <app-tinymce formControlName="descricao"></app-tinymce>
           </div>
         </div>
+
+        <!-- Buttons -->
         <div class="row">
           <div class="col-12 d-flex justify-content-between">
             <button 
@@ -195,6 +214,7 @@
             <button mat-button type="button" (click)="fechar()">Fechar</button>
           </div>
         </div>
+
       </form>
   </div>
 </mat-dialog-content>

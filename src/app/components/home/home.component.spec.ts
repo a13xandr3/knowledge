@@ -68,12 +68,20 @@ describe('HomeComponent', () => {
     homeServiceSpy.deleteLink.and.returnValue(of({ 
       id: 1, 
       name: '', 
-      url: '', 
+      url: '',
+      uri: {}, 
       categoria: '', 
       subCategoria: '',
       descricao: '',
       tag: {},
-      oldCategoria: '' }));
+      dataEntradaManha: '',
+      dataSaidaManha: '',
+      dataEntradaTarde: '',
+      dataSaidaTarde: '',
+      dataEntradaNoite: '',
+      dataSaidaNoite: '',
+      oldCategoria: '' 
+    }));
     spyOn(component, 'getLinks');
     component.delete(1);
     expect(homeServiceSpy.deleteLink).toHaveBeenCalledWith(1);
@@ -94,12 +102,19 @@ describe('HomeComponent', () => {
       id: 10,
       name: 'Teste',
       url: 'http://teste.com',
+      uri: {},
       status: 'alterar',
       categoria: 'TI',
       subCategoria: '',
       descricao: 'desc',
       tag: {},
-      oldCategoria: ''
+      oldCategoria: '',
+      dataEntradaManha: '',
+      dataSaidaManha: '',
+      dataEntradaTarde: '',
+      dataSaidaTarde: '',
+      dataEntradaNoite: '',
+      dataSaidaNoite: '',
     });
     expect(component.getLinks).toHaveBeenCalledWith('categoriaTeste');
   });
@@ -111,12 +126,20 @@ describe('HomeComponent', () => {
       id: 10,
       name: 'Teste',
       url: 'http://teste.com',
+      uri: {},
       status: 'alterar',
       categoria: 'TI',
       subCategoria: '',
       descricao: 'desc',
       tag: {},
-      oldCategoria: ''
+      oldCategoria: '',
+      dataEntradaManha: '',
+      dataSaidaManha: '',
+      dataEntradaTarde: '',
+      dataSaidaTarde: '',
+      dataEntradaNoite: '',
+      dataSaidaNoite: '',
+
     });
     expect(component.getLinks).not.toHaveBeenCalled();
     expect(linkStateSpy.triggerRefresh).not.toHaveBeenCalled();
