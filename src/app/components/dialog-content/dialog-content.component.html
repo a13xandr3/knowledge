@@ -81,8 +81,7 @@
         <!--TimeSheet -- DATAS -->
         <div
           class="row" 
-          *ngIf="this.fr.get('categoria')?.value == 'TimeSheet' || 
-                 this.fr.get('categoria')?.value == 'timesheet' ">
+          *ngIf="this.fr.get('categoria')?.value == 'timesheet' ">
           <div class="col-12 w-16">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Data Entrada Manhã</mat-label>
@@ -92,6 +91,7 @@
                 title="Data de Entrada Período Manhã"
                 mask="d0/M0/0000 H0:m0:s0"
                 placeholder="dd/mm/aaaa hh:mm:ss"
+                [dropSpecialCharacters]="false"
                 >
             </mat-form-field>
           </div>
@@ -104,6 +104,7 @@
                 title="Data de Saída Período Manhã"
                 mask="d0/M0/0000 H0:m0:s0"
                 placeholder="dd/mm/aaaa hh:mm:ss"
+                [dropSpecialCharacters]="false"
                 >
             </mat-form-field>
           </div>
@@ -116,6 +117,7 @@
                 title="Data de Entrada Período Tarde"
                 mask="d0/M0/0000 H0:m0:s0"
                 placeholder="dd/mm/aaaa hh:mm:ss"
+                [dropSpecialCharacters]="false"
                 >
             </mat-form-field>
           </div>
@@ -128,6 +130,7 @@
                 title="Data de Saída Período Tarde"
                 mask="d0/M0/0000 H0:m0:s0"
                 placeholder="dd/mm/aaaa hh:mm:ss"
+                [dropSpecialCharacters]="false"
                 >
             </mat-form-field>
           </div>
@@ -140,6 +143,7 @@
                 title="Data de Entrada Período Noite"
                 mask="d0/M0/0000 H0:m0:s0"
                 placeholder="dd/mm/aaaa hh:mm:ss"
+                [dropSpecialCharacters]="false"
                 >
             </mat-form-field>
           </div>
@@ -152,6 +156,7 @@
                 title="Data de Saída Período Noite"
                 mask="d0/M0/0000 H0:m0:s0"
                 placeholder="dd/mm/aaaa hh:mm:ss"
+                [dropSpecialCharacters]="false"
                 >
             </mat-form-field>
           </div>

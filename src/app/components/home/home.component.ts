@@ -74,8 +74,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     const enderecoUrl = url?.url ?? ''; // string ou ''
     const enderecoUri = url?.uri?.uris?.length ? url.uri.uris[0] : ''; // primeira URI se existir
 
-    console.log('Url', enderecoUrl);
-    console.log('Uri', enderecoUri);
+    //console.log('Url', enderecoUrl);
+    //console.log('Uri', enderecoUri);
 
     // se url for vazio, tenta pegar o uri
     return enderecoUrl && enderecoUrl.length > 0 ? enderecoUrl : enderecoUri;
@@ -166,7 +166,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     this.homeService.getLinks(this.pageIndex, this.pageSize, this.categoriaExcessao, this.itemModificadoCategoria, this.itemModificadoTag).subscribe({
       next: (response: any) => {
         
-        console.log('response-get-links==> ',response);
+        //console.log('response-get-links==> ',response);
         
         let lnk = response.atividades;
           lnk.sort((a: any, b: any) => a.name.localeCompare(b?.name));
