@@ -82,6 +82,8 @@ export class HeaderComponent implements OnInit {
         id: 0,
         name: '',
         url: '',
+        uri: [],
+        tag: [],
         status: 'inclusao',
         categoria: '',
         descricao: '',

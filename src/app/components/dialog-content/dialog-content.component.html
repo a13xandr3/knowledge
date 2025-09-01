@@ -14,7 +14,6 @@
         </div>
 
         <div class="row">
-          
           <!-- Categoria e sub-Categoria -->
           <div class="d-flex col-6 gap-1">
             <!-- Categoria com autocomplete editável -->
@@ -57,15 +56,18 @@
           </div>
         </div>
         
+        <div class="row">
+          <div class="col-12">
+            <app-mat-chips formControlName="tag" [(allChips)]="allTags" [label]="'Tag'"></app-mat-chips>
+          </div>
+        </div>
+
         <!-- Uri e URL -->
         <div class="row">
-          
           <div class="col-6">
-
+            <app-mat-chips formControlName="uri" [(allChips)]="allUris" [label]="'URI'"></app-mat-chips>
           </div>
-                    
           <div class="col-6">
-
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Link</mat-label>
                 <input 
@@ -74,47 +76,8 @@
                   title="lnk"
                   >
               </mat-form-field>
-
-          </div>
-
-        </div>
-
-        <!-- Tags -->
-        <div class="row">
-          <div class="col-12 w-100">
-            <mat-form-field 
-              class="w-100 example-chip-list" 
-              appearance="fill">
-                <mat-label>Lista de Tags</mat-label>
-                <mat-chip-grid #chipGrid aria-label="Preencha Tag">
-                  <mat-chip-row *ngFor="let tag of ArrTags" (removed)="removeTag(tag)">
-                      {{tag}}
-                    <button type="button" matChipRemove [attr.aria-label]="'remove ' + tag">
-                      <mat-icon>X</mat-icon>
-                    </button>
-                  </mat-chip-row>
-                </mat-chip-grid>
-                <input 
-                  placeholder="New tag" 
-                  #tagInput 
-                  [formControl]="tagCtrl"
-                  [matChipInputFor]="chipGrid" 
-                  [matAutocomplete]="auto"
-                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                  (matChipInputTokenEnd)="addTag($event)"
-                  />
-                <mat-autocomplete 
-                  #auto="matAutocomplete" 
-                  (optionSelected)="tagSelected($event)">
-                  <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
-                    {{tag}}
-                  </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
           </div>
         </div>
-
-
         <!--TimeSheet -- DATAS -->
         <div
           class="row" 

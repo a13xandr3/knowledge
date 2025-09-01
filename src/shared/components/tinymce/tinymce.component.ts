@@ -1,4 +1,4 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorComponent } from '@tinymce/tinymce-angular';
 @Component({
@@ -14,7 +14,11 @@ import { EditorComponent } from '@tinymce/tinymce-angular';
   ]
 })
 export class TinymceComponent implements ControlValueAccessor {
+
   value: string = '';
+
+  constructor(){
+  }
 
   //** configuration Editor */
   init: EditorComponent['init'] = {
@@ -68,8 +72,9 @@ export class TinymceComponent implements ControlValueAccessor {
       { text: 'C#', value: 'csharp' },
       { text: 'C++', value: 'cpp' }
     ],
-    min_height: 435,
-    max_height: 800
+    min_height: 375,
+    height: 375,
+    max_height: 375
   }
   private onChange = (value: any) => {};
   private onTouched = () => {};

@@ -50,11 +50,41 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     private comportamentoService: ComportamentoService,
     private linkStateService: LinkStateService,
     private homeService: HomeService,
-  ) {}
+  ) {
+  }
   ngOnInit(): void {
     this.executarSequencia();
   }
   ngAfterViewInit(): void {
+  }
+  _injectUrl(url: any): any {
+    let retorno: any = '';
+    let enderecoUrl = url.url || '';
+    let enderecoUri = Array.isArray(url?.uri?.uris[0]) ? url?.uri?.uris[0] : '' ;
+    console.log('Url', enderecoUrl);
+    console.log('Uri', enderecoUri);
+    if ( enderecoUrl.length == 0 ) {
+      retorno = enderecoUrl;
+    } else {
+      retorno = enderecoUri;
+    }
+    return retorno;
+  }
+  injectUrl(url: any): string {
+    const enderecoUrl = url?.url ?? ''; // string ou ''
+    const enderecoUri = url?.uri?.uris?.length ? url.uri.uris[0] : ''; // primeira URI se existir
+
+    console.log('Url', enderecoUrl);
+    console.log('Uri', enderecoUri);
+
+    // se url for vazio, tenta pegar o uri
+    return enderecoUrl && enderecoUrl.length > 0 ? enderecoUrl : enderecoUri;
+  }
+  arr(_arr: any): boolean {
+    if ( Array.isArray(_arr) ) {
+      return true;
+    }
+    return false;
   }
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
@@ -135,7 +165,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   getLinks(): void {
     this.homeService.getLinks(this.pageIndex, this.pageSize, this.categoriaExcessao, this.itemModificadoCategoria, this.itemModificadoTag).subscribe({
       next: (response: any) => {
-        //console.log('response-get-links==> ',response);
+        
+        console.log('response-get-links==> ',response);
+        
         let lnk = response.atividades;
           lnk.sort((a: any, b: any) => a.name.localeCompare(b?.name));
           this.links = lnk;
@@ -154,6 +186,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
         id: obj.id,
         name: obj.name,
         url: obj.url,
+        uri: [obj.uri],
         status: 'alterar',
         categoria: obj.categoria,
         descricao: obj.descricao,

@@ -40,8 +40,8 @@
         <div class="d-flex gap-3 justify-content-end">
             <span>
                 <a 
-                  [attr.href]="link.url || null"
-                  [class.disabled]="!link.url"
+                  [attr.href]="injectUrl(link)"
+                  [class.disabled]="!link.url && !arr(link.uri.uris) "
                   target="_blank" 
                   rel="noopener noreferrer">
                     <img 
@@ -49,8 +49,22 @@
                       alt="Abre url externamente" >
                 </a>
             </span>
-            <span class="actions"><img src="../../assets/icos/edit.svg" (click)="abrirDialog(link, false)" alt="Edit" ></span>
-            <span class="actions"><img src="../../assets/icos/delete.svg" (click)="delete(link.id)" alt="Delete" ></span>
+            <span 
+              class="actions">
+              <img 
+                src="../../assets/icos/edit.svg" 
+                (click)="abrirDialog(link, false)" 
+                alt="Edit" 
+                class="edit" >
+            </span>
+            <span 
+              class="actions">
+              <img 
+                src="../../assets/icos/delete.svg" 
+                (click)="delete(link.id)"
+                class="delete"
+                alt="Delete">
+              </span>
         </div>
       </td>
     </ng-container>

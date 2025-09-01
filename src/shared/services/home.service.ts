@@ -50,10 +50,10 @@ export class HomeService {
   }
   //** Monta lista de Dropdown */
   getCategorias(): Observable<ILinksResponse> {
-    return this.http.get<ILinkRequest>(`${this.urlCategorias}`);
+    return this.http.get<ILinksResponse>(`${this.urlCategorias}`);
   }
   getTags(): Observable<ILinksResponse> {
-    return this.http.get<ILinkRequest>(`${this.urlTags}`);
+    return this.http.get<ILinksResponse>(`${this.urlTags}`);
   }
   //** ao selecionar o item no dropdown */
   getSearchCategoria(pageIndex: number, pageSize: number, itemCategoria: string): Observable<{ links: ILinksResponse[]; total: number }> {
@@ -70,6 +70,7 @@ export class HomeService {
     const auxRequest = {
       name: request.name,
       url: request.url,
+      uri: request.uri,
       categoria: request.categoria,
       subCategoria: request.subCategoria,
       descricao: request.descricao,
@@ -84,10 +85,11 @@ export class HomeService {
       headers: { 'Content-Type': 'application/json' }
     });
   }  
-  postLink(request: ILinkRequest): Observable<void> {
+  postLink(request: ILinkRequest): Observable<ILinksResponse> {
     const auxRequest = {
       name: request.name,
       url: request.url,
+      uri: request.uri,
       categoria: request.categoria,
       subCategoria: request.subCategoria,
       descricao: request.descricao,
@@ -99,12 +101,12 @@ export class HomeService {
       dataEntradaNoite: request.dataEntradaNoite,
       dataSaidaNoite: request.dataSaidaNoite
     }
-    return this.http.post<void>(`${this.url}`, auxRequest);
+    return this.http.post<ILinksResponse>(`${this.url}`, auxRequest);
   }
   putLink(request: ILinkRequest): Observable<ILinksResponse> {
-    return this.http.put<ILinkRequest>(`${this.url}/${request.id}`, request );
+    return this.http.put<ILinksResponse>(`${this.url}/${request.id}`, request );
   }
   deleteLink(id: number): Observable<ILinksResponse> {
-    return this.http.delete<ILinkRequest>(`${this.url}/${id}`);
+    return this.http.delete<ILinksResponse>(`${this.url}/${id}`);
   }
 }
