@@ -12,7 +12,7 @@ import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { concatMap, of, Subject, takeUntil, tap } from 'rxjs';
+import { of, Subject, takeUntil, tap } from 'rxjs';
 
 import { IactionStatus } from 'src/shared/request/request';
 import { LinkStateService } from '../../../shared/state/link-state-service';
@@ -57,26 +57,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   }
   ngAfterViewInit(): void {
   }
-  _injectUrl(url: any): any {
-    let retorno: any = '';
-    let enderecoUrl = url.url || '';
-    let enderecoUri = Array.isArray(url?.uri?.uris[0]) ? url?.uri?.uris[0] : '' ;
-    console.log('Url', enderecoUrl);
-    console.log('Uri', enderecoUri);
-    if ( enderecoUrl.length == 0 ) {
-      retorno = enderecoUrl;
-    } else {
-      retorno = enderecoUri;
-    }
-    return retorno;
-  }
   injectUrl(url: any): string {
     const enderecoUrl = url?.url ?? ''; // string ou ''
     const enderecoUri = url?.uri?.uris?.length ? url.uri.uris[0] : ''; // primeira URI se existir
-
-    //console.log('Url', enderecoUrl);
-    //console.log('Uri', enderecoUri);
-
     // se url for vazio, tenta pegar o uri
     return enderecoUrl && enderecoUrl.length > 0 ? enderecoUrl : enderecoUri;
   }
@@ -90,7 +73,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.getLinks();
-    
     this.updatePagedItems(event.pageIndex * event.pageSize, event.pageSize);
   }
   updatePagedItems(startIndex: number, pageSize: number) {
@@ -101,32 +83,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     this.destroy$.complete();
   }
   ngOnChanges(changes: SimpleChanges): void {
-      console.log(changes);
+      console.log('changes ==> ', changes);
   }
   private executarSequencia(): void {
     of(null).pipe(
       tap(() => this.resetPaginador()),
-      concatMap(() => of(null).pipe(
-        tap(() => this.resetPaginador()),
-      )),
       tap(() => this.subscreverComportamentos()),
-      concatMap(() => of(null).pipe(
-        tap(() => this.subscreverComportamentos()),
-      )),
       tap(() => this.subscreverAtualizacoes()),
-      concatMap(() => of(null).pipe(
-        tap(() => this.subscreverAtualizacoes()),
-      )),
-      tap(() => this.updatePagedItems(this.pageIndex, this.pageSize)),
-      concatMap(() => of(null).pipe(
-        tap(() => this.updatePagedItems(this.pageIndex, this.pageSize)),
-      )),
-      tap(() => this.getLinks()),
-      concatMap(() => of(null).pipe(
-        tap(() => this.getLinks()),
-      ))
+      tap(() => this.updatePagedItems(this.pageIndex, this.pageSize))
     ).subscribe({
-      complete: () => console.log('sequencia completa')
+      complete: () => console.log('Sequência completa')
     });
   }
   private subscreverComportamentos(): void {
@@ -165,13 +131,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   getLinks(): void {
     this.homeService.getLinks(this.pageIndex, this.pageSize, this.categoriaExcessao, this.itemModificadoCategoria, this.itemModificadoTag).subscribe({
       next: (response: any) => {
-        
-        //console.log('response-get-links==> ',response);
-        
         let lnk = response.atividades;
-          lnk.sort((a: any, b: any) => a.name.localeCompare(b?.name));
-          this.links = lnk;
-          this.totalLinks = response.total;
+        lnk.sort((a: any, b: any) => a.name.localeCompare(b?.name));
+        this.links = lnk;
+        this.totalLinks = response.total;
       },
       error: (err: string) => {
         console.error(err);
@@ -221,9 +184,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   }
   mostrarMensagem(msg: string): void {
     this.snackBar.open(msg, 'Fechar', {
-      duration: 5000, // em milissegundos
-      verticalPosition: 'top',   // ou 'bottom'
-      horizontalPosition: 'right' // ou 'left', 'center'
+      duration: 5000,                       // em milissegundos
+      verticalPosition: 'top',              // ou 'bottom'
+      horizontalPosition: 'right'           // ou 'left', 'center'
     });
   }
   getTags(tag: any): string[] {

@@ -50,6 +50,8 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
     private zone: NgZone,
     private datePipe: DatePipe) 
   {
+    console.log('data ==> ', data);
+
     this.showSite = data.showSite;
 
     //** normalize o data de entrada antes de criar o FormGroup */
