@@ -24,7 +24,7 @@ import { ILinkRequest } from 'src/shared/request/request';
   styleUrls: ['./dialog-content.component.scss'],
   providers: [DatePipe]
 })
-export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DialogContentComponent {
 
   separatorKeysCodes: number[] = [ENTER, COMMA];  //chip
   
@@ -39,7 +39,7 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
   exibeSite: any;
   safeUrl: SafeResourceUrl | undefined;
   currentContent = '';
-  
+
   constructor(
     private service: HomeService,
     private fb: FormBuilder,
@@ -50,36 +50,12 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
     private SnackService: SnackService) 
   {
 
-    //** normalize o data de entrada antes de criar o FormGroup */
-    const normTags = (() => {
-      if (!this.data) return [];
-      if (Array.isArray(this.data?.tag[0]?.tags)) return this.data?.tag[0]?.tags.map((t: any) => typeof t === 'string' ? t : (t.value ?? t.tag ?? String(t)));
-      if (this.data?.tag[0] && Array.isArray(this.data?.tag[0]?.tags)) return this.data?.tag[0]?.tags.map((t: any) => typeof t === 'string' ? t : (t.value ?? t.tag ?? String(t)));
-      return [];
-    })();
-    const normUris = (() => {
-      if (!this.data) return [];
-      if (Array.isArray(this.data?.uri[0]?.uris)) return this.data?.uri[0]?.uris.map((u: any) => typeof u === 'string' ? u : (u.value ?? u.uri ?? String(u)));
-      if (this.data?.uri[0] && Array.isArray(this.data?.uri[0]?.uris)) return this.data?.uri[0]?.uris.map((u: any) => typeof u === 'string' ? u : (u.value ?? u.uri ?? String(u)));
-      return [];
-    })();
-
-    /*
-    Array.isArray(data?.uris?.uri) 
-              ? data?.uris?.uri?.map((u: any) => typeof u === 'string' ? u : u.value) 
-              : (data?.uris?.uri ? [data.uris] : [])
-
-    Array.isArray(data?.tag?.tags) 
-              ? data?.tag?.tags?.map((t: any) => typeof t === 'string' ? t : t.value) 
-              : (data?.tag?.tags ? [data.tag.tags] : [])          
-    */
-
     this.fr = this.fb.group({
       id: [{ value: data?.id || '', disabled: true }],
       name: [data?.name],
       url: [data?.url],
-      uri: [normUris],
-      tag: [normTags],
+      uri: [this.normalizeUris(data)],
+      tag: [this.normalizeTags(data)],
       categoria: [data?.categoria],
       subCategoria: [data?.subCategoria],
       descricao: [data?.descricao || ''],
@@ -93,28 +69,68 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       dataSaidaNoite: [this.datePipe.transform(data?.dataSaidaNoite, 'dd/MM/yyyy HH:mm:ss')]
     });
   }
-  
-  ngOnInit(): void {}
-  
-  async ngAfterViewInit() {}
-  
-  ngOnDestroy(): void {}
-  
+  private normalizeTags(data: any): string[] {
+    return Array.isArray(data?.tag?.[0]?.tags)
+      ? data.tag[0].tags.map((t: any) =>
+        typeof t === 'string' ? t : (t.value ?? t.tag ?? String(t)))
+      : [];
+  }
+  private normalizeUris(data: any): string[] {
+    return Array.isArray(data?.uri?.[0]?.uris)
+      ? data.uri[0].uris.map((u: any) =>
+          typeof u === 'string' ? u : (u.value ?? u.uri ?? String(u)))
+      : [];
+  }
+
   fechar() {
     this.dialogRef.close();
   }
   
   salvar(): void {
-    if (this.fr.valid) {
-      const dados = this.fr.getRawValue();
-      if(this.data.status === 'inclusao') {
-        this.postSalvar(dados);
-      } else {
-        this.putAtualizar(dados);
-      }
-      this.dialogRef.close(dados);
-    }
+    if (!this.fr.valid) return;
+    const dados = this.fr.getRawValue();
+    const isInclusao = this.data.status === 'inclusao';
+    this.salvarOuAtualizar(dados, isInclusao);
+    this.dialogRef.close(dados);
   }
+
+  private salvarOuAtualizar(request: ILinkRequest, isInclusao: boolean): void {
+    const auxRequest = this.buildRequest(request);
+    const call$ = isInclusao
+      ? this.service.postLink(auxRequest)
+      : this.service.putLink(auxRequest);
+    call$?.subscribe({
+      next: () => {
+        this.mostrarMensagem(
+          isInclusao ? 'Card Inserido com sucesso!' : 'Card Atualizado com sucesso!',
+          'Fechar'
+        );
+        this.linkStateService.triggerRefresh();
+      },
+      error: err => console.error(err)
+    });
+  }
+  private buildRequest(request: ILinkRequest) {
+    const isTimesheet = request.categoria?.toLowerCase() === 'timesheet';
+    const toISO = (dt: any) => isTimesheet ? this.ISODate(dt) : null;
+    return {
+      id: request.id,
+      name: request.name,
+      url: request.url,
+      uri: { uris: this.allUris },
+      categoria: request.categoria ? this.toTitleCase(request.categoria) : '',
+      subCategoria: request.subCategoria ? this.toTitleCase(request.subCategoria) : '',
+      descricao: request.descricao,
+      tag: { tags: this.allTags },
+      dataEntradaManha: toISO(request?.dataEntradaManha),
+      dataSaidaManha: toISO(request?.dataSaidaManha),
+      dataEntradaTarde: toISO(request?.dataEntradaTarde),
+      dataSaidaTarde: toISO(request?.dataSaidaTarde),
+      dataEntradaNoite: toISO(request?.dataEntradaNoite),
+      dataSaidaNoite: toISO(request?.dataSaidaNoite)
+    };
+  }
+
   toTitleCase(str: string): string {
     return str
       .toLowerCase()                                              // deixa tudo minúsculo primeiro (opcional, mas comum)
