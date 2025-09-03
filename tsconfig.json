@@ -15,9 +15,7 @@
       "node_modules/@types"
     ],
     "lib": [
-      "es2018",
-      "dom"
-    ],
+      "es2022", "dom"],
     "useDefineForClassFields": false,
     "forceConsistentCasingInFileNames": true,
     "strict": true,

@@ -1,19 +1,18 @@
+import { SnackService } from './../../../shared/services/snack.service';
 import { DatePipe } from '@angular/common';
 import { 
   AfterViewInit, 
   Component, 
   ElementRef, 
   Inject, 
-  NgZone, 
   OnDestroy, 
   OnInit, 
   Optional, 
   ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { LinkStateService } from '../../../shared/state/link-state-service';
@@ -26,6 +25,7 @@ import { ILinkRequest } from 'src/shared/request/request';
   providers: [DatePipe]
 })
 export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy {
+
   separatorKeysCodes: number[] = [ENTER, COMMA];  //chip
   
   allTags: string[] = [];                         //Tags
@@ -35,24 +35,20 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('uriInput') uriInput!: ElementRef<HTMLInputElement>;
 
   fr: FormGroup;
-  showSite = false;
+  
   exibeSite: any;
   safeUrl: SafeResourceUrl | undefined;
   currentContent = '';
+  
   constructor(
     private service: HomeService,
     private fb: FormBuilder,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
-    private snackBar: MatSnackBar,
     private dialogRef: MatDialogRef<DialogContentComponent>,
-    private sanitizer: DomSanitizer,
     private linkStateService: LinkStateService,
-    private zone: NgZone,
-    private datePipe: DatePipe) 
+    private datePipe: DatePipe,
+    private SnackService: SnackService) 
   {
-    console.log('data ==> ', data);
-
-    this.showSite = data.showSite;
 
     //** normalize o data de entrada antes de criar o FormGroup */
     const normTags = (() => {
@@ -97,12 +93,17 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       dataSaidaNoite: [this.datePipe.transform(data?.dataSaidaNoite, 'dd/MM/yyyy HH:mm:ss')]
     });
   }
+  
   ngOnInit(): void {}
+  
   async ngAfterViewInit() {}
+  
   ngOnDestroy(): void {}
+  
   fechar() {
     this.dialogRef.close();
   }
+  
   salvar(): void {
     if (this.fr.valid) {
       const dados = this.fr.getRawValue();
@@ -139,8 +140,8 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       dataSaidaNoite: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataSaidaNoite) : null
     }
     this.service.postLink(auxRequest).subscribe({
-      next: ((resp: any) => {
-        this.mostrarMensagem('Card Inserido com sucesso!');
+      next: (() => {
+        this.mostrarMensagem('Card Inserido com sucesso!', 'Fechar');
         this.linkStateService.triggerRefresh();
       }),
       error: (err => {
@@ -174,8 +175,8 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       dataSaidaNoite: request.categoria.toLowerCase() == 'timesheet' ? this.ISODate(request?.dataSaidaNoite) : null
     }
     this.service.putLink(auxRequest)?.subscribe({
-      next: ((resp: any) => {
-        this.mostrarMensagem('Card Atualizado com sucesso!');
+      next: (() => {
+        this.mostrarMensagem('Card Atualizado com sucesso!', 'Fechar');
         this.linkStateService.triggerRefresh();
       }),
       error: (err => {
@@ -183,11 +184,8 @@ export class DialogContentComponent implements OnInit, AfterViewInit, OnDestroy 
       })
     })
   }
-  mostrarMensagem(msg: string): void {
-    this.snackBar.open(msg, 'Fechar', {
-      duration: 5000,                 // em milissegundos
-      verticalPosition: 'top',        // ou 'bottom'
-      horizontalPosition: 'right'     // ou 'left', 'center'
-    });
+  mostrarMensagem(msg: string, action: any): void {
+    this.SnackService.mostrarMensagem(msg, action);
   }
+
 }

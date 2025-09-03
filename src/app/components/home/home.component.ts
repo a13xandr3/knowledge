@@ -10,17 +10,18 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { of, Subject, takeUntil, tap } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { IactionStatus } from 'src/shared/request/request';
 import { LinkStateService } from '../../../shared/state/link-state-service';
 import { HomeService } from '../../../shared/services/home.service';
 import { Comportamento, ComportamentoService } from '../../../shared/services/comportamento.service';
 import { ILinksResponse } from '../../../shared/response/response';
+import { SnackService } from './../../../shared/services/snack.service';
 
 import arquivo from '../../../assets/data/arquivo.json';
+
 import { DialogContentComponent } from '../dialog-content/dialog-content.component';
 @Component({
   selector: 'app-home',
@@ -45,55 +46,34 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   private destroy$ = new Subject<void>();
 
   constructor(
-    private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private comportamentoService: ComportamentoService,
     private linkStateService: LinkStateService,
     private homeService: HomeService,
+    private SnackService: SnackService
   ) {
   }
   ngOnInit(): void {
-    this.executarSequencia();
+    this.resetPaginador();
+    this.subscreverComportamentos();
+    this.subscreverAtualizacoes();
   }
   ngAfterViewInit(): void {
   }
   injectUrl(url: any): string {
-    const enderecoUrl = url?.url ?? ''; // string ou ''
-    const enderecoUri = url?.uri?.uris?.length ? url.uri.uris[0] : ''; // primeira URI se existir
-    // se url for vazio, tenta pegar o uri
-    return enderecoUrl && enderecoUrl.length > 0 ? enderecoUrl : enderecoUri;
-  }
-  arr(_arr: any): boolean {
-    if ( Array.isArray(_arr) ) {
-      return true;
-    }
-    return false;
+    return url?.url || url?.uri?.uris?.[0] || '';
   }
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.getLinks();
-    this.updatePagedItems(event.pageIndex * event.pageSize, event.pageSize);
-  }
-  updatePagedItems(startIndex: number, pageSize: number) {
-    this.pagedItems = this.links?.slice(startIndex, startIndex + pageSize);
   }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
   ngOnChanges(changes: SimpleChanges): void {
-      console.log('changes ==> ', changes);
-  }
-  private executarSequencia(): void {
-    of(null).pipe(
-      tap(() => this.resetPaginador()),
-      tap(() => this.subscreverComportamentos()),
-      tap(() => this.subscreverAtualizacoes()),
-      tap(() => this.updatePagedItems(this.pageIndex, this.pageSize))
-    ).subscribe({
-      complete: () => console.log('Sequência completa')
-    });
+    console.log('changes ==> ', changes);
   }
   private subscreverComportamentos(): void {
     this.comportamentoService.comportamentos$
@@ -111,20 +91,24 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
         }
       });
   }
+  private atualizarLista(): void {
+    this.getLinks();
+    this.linkStateService.triggerRefresh();
+  }
   onChangeTag(event: PageEvent, value: any) {
     this.pageIndex = event!.pageIndex;
     this.pageSize = event!.pageSize;
     let tagValue = `${value}`;
     this.onItemSelecionado(tagValue);
   }
-  onItemSelecionado(itemSelecionado: any): void {
-    if ( itemSelecionado.split('_')[1].toString() === 'categoria' ) {
-      this.itemModificadoCategoria = itemSelecionado.split('_')[0].toString();
-      this.itemModificadoTag = '';
-    } else {
-      this.itemModificadoCategoria = '';
-      this.itemModificadoTag = itemSelecionado.split('_')[0].toString();
-    }
+  private parseItemSelecionado(value: string): { tipo: 'categoria' | 'tag', valor: string } {
+    const [valor, tipo] = value.split('_');
+    return { tipo: tipo as 'categoria' | 'tag', valor };
+  }
+  onItemSelecionado(itemSelecionado: string): void {
+    const { tipo, valor } = this.parseItemSelecionado(itemSelecionado);
+    this.itemModificadoCategoria = tipo === 'categoria' ? valor : '';
+    this.itemModificadoTag = tipo === 'tag' ? valor : '';
     this.resetPaginador();
     this.getLinks();
   }
@@ -136,7 +120,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
         this.links = lnk;
         this.totalLinks = response.total;
       },
-      error: (err: string) => {
+      error: (err: any) => {
         console.error(err);
       }
     });
@@ -155,7 +139,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
         descricao: obj.descricao,
         tag: [obj.tag],
         subCategoria: obj.subCategoria,
-        oldCategoria: obj.categoria,
         showSite: showSite,
         dataEntradaManha: obj.dataEntradaManha,
         dataSaidaManha: obj.dataSaidaManha,
@@ -167,64 +150,36 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.getLinks();
-        this.linkStateService.triggerRefresh();
+        this.atualizarLista();
       }
     });
   }
   delete(id: number): void {
     this.homeService.deleteLink(id).subscribe({
       next: () => {
-        this.mostrarMensagem('Card excluido com sucesso!');
-        this.getLinks();
-        this.linkStateService.triggerRefresh();
+        this.mostrarMensagem('Card excluido com sucesso!', 'Fechar');
+        this.atualizarLista();
       },
       error: (err: any) => console.error(err)
     });
   }
-  mostrarMensagem(msg: string): void {
-    this.snackBar.open(msg, 'Fechar', {
-      duration: 5000,                       // em milissegundos
-      verticalPosition: 'top',              // ou 'bottom'
-      horizontalPosition: 'right'           // ou 'left', 'center'
-    });
+  mostrarMensagem(msg: string, action: any): void {
+    this.SnackService.mostrarMensagem(msg, action);
   }
   getTags(tag: any): string[] {
-    if( this.hasTags(tag) ) {
-      if( Array.isArray(tag?.tags)) {
-        return tag.tags;
-      }
-      if ( Array.isArray(tag)) {
-        const allTags: string[] = [];
-        tag.forEach((item: any) => {
-          if (Array.isArray(item?.tags)) {
-            allTags.push(...item.tags);
-          }
-        });
-        return allTags;
-      }
+    if (!tag) return [];
+    if (Array.isArray(tag?.tags)) return tag.tags;
+    if (Array.isArray(tag)) {
+      return tag.flatMap((item: any) => Array.isArray(item?.tags) ? item.tags : []);
     }
     return [];
   }
   hasTags(data: any): boolean {
-    if( !data ) {
-      return false;
-    }
-    //case seja objeto unico
-    if ( !Array.isArray(data) && Array.isArray(data.tags)) {
-      return data.tags.length > 0;
-    }
-    // caso seja array de objetos [ {tags: [] }]
-    if ( Array.isArray(data) ) {
-      let x = data.some(item => item.tags && Array.isArray(item.tags) && item.tags.length > 0); 
-      return data.some(item => item.tags && Array.isArray(item.tags) && item.tags.length > 0);
-    }
-    return false;
+    return this.getTags(data).length > 0;
   }
   resetPaginador(): void {
     this.pageIndex = 0;
     this.pageSize = 10;
-    this.totalLinks = 0;
     if (this.paginator) {
       this.paginator.firstPage();
     }
