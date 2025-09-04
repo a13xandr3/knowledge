@@ -1,3 +1,4 @@
+import { LoginService } from 'src/shared/services/login.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -8,7 +9,22 @@ import { Component } from '@angular/core';
 export class AppComponent {
   public title = 'Knowledge Base';
 
+  constructor(private loginService: LoginService) {}
+
   ngOnInit() {
+    this.login();
   }
 
+  login(): void {
+    this.loginService.login('alexandre','1234').subscribe({
+      next: (response: any) => {
+        console.log('token', response.token);
+        //this.router.navigate(['/dashboard']);
+      },
+      error: (err: any) => {
+        console.log(err);
+      }
+    });
+  }
+  
 }

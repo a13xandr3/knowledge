@@ -78,7 +78,7 @@
         <!--TimeSheet -- DATAS -->
         <div
           class="row" 
-          *ngIf="this.fr.get('categoria')?.value == 'timesheet' ">
+          *ngIf="this.fr.get('categoria')?.value.toLowerCase() == 'timesheet' ">
           <div class="col-12 w-16">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Data Entrada Manhã</mat-label>

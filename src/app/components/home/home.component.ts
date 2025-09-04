@@ -1,3 +1,4 @@
+import { LoginService } from 'src/shared/services/login.service';
 import { 
   AfterViewInit, 
   Component, 
@@ -50,7 +51,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     private comportamentoService: ComportamentoService,
     private linkStateService: LinkStateService,
     private homeService: HomeService,
-    private SnackService: SnackService
+    private snackService: SnackService,
+    private loginService: LoginService
   ) {
   }
   ngOnInit(): void {
@@ -127,6 +129,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   }
   abrirDialog(obj: IactionStatus, showSite?: boolean): void {
     const dialogRef = this.dialog.open(DialogContentComponent, {
+      autoFocus: true,
       width: '200vw',
       height: '100vh',
       data: {
@@ -134,7 +137,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
         name: obj.name,
         url: obj.url,
         uri: [obj.uri],
-        status: 'alterar',
+        status: 'alteracao',
         categoria: obj.categoria,
         descricao: obj.descricao,
         tag: [obj.tag],
@@ -164,7 +167,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     });
   }
   mostrarMensagem(msg: string, action: any): void {
-    this.SnackService.mostrarMensagem(msg, action);
+    this.snackService.mostrarMensagem(msg, action);
   }
   getTags(tag: any): string[] {
     if (!tag) return [];

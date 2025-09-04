@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ILinkRequest } from 'src/shared/request/request';
 import { ILinksResponse } from 'src/shared/response/response';
+
+const token = localStorage.getItem('token');
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,28 +18,9 @@ export class HomeService {
   constructor(
     private http: HttpClient,
   ) { }
-  /*
-  _carregarConteudo(urlTarget: string): any {
-    let retorno;
-    this.http.get(`${this.urlBrowser}?url=${urlTarget}`, { responseType: 'text' })
-      .subscribe({
-        next: data => retorno = data,
-        error: err => console.error(err)
-    });
-    return retorno;
-  }
-  */
   carregaConteudo(urlTarget: string): Observable<any> {
     return this.http.get(`${this.urlBrowser}?url=${urlTarget}`, { responseType: 'text' });
   }
-  /*
-  getThumbs(): Observable<any> {
-    // let image = '';
-    let image = ''
-    let params = new HttpParams().set('url', image);
-    return this.http.post<any>('http://localhost:8081/api/fxpreview', {}, { params });
-  }
-  */
   getLinks(pageIndex: number, pageSize: number, excessao: any[], categoria: string, tag: string): Observable<{ links: ILinksResponse[]; total: number }> {
     let params = new HttpParams()
     .set('page', pageIndex.toString())
@@ -46,14 +30,26 @@ export class HomeService {
     excessao.forEach((item: any) => {
       params = params.append('excessao', item);
     });
-    return this.http.get<{ links: ILinksResponse[]; total: number }>(this.url, { params });
+    return this.http.get<{ links: ILinksResponse[]; total: number }>(this.url, { params, 
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}` 
+      })
+     } );
   }
   //** Monta lista de Dropdown */
   getCategorias(): Observable<ILinksResponse> {
-    return this.http.get<ILinksResponse>(`${this.urlCategorias}`);
+    return this.http.get<ILinksResponse>(`${this.urlCategorias}`, {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}` 
+      })
+    });
   }
   getTags(): Observable<ILinksResponse> {
-    return this.http.get<ILinksResponse>(`${this.urlTags}`);
+    return this.http.get<ILinksResponse>(`${this.urlTags}`, {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}` 
+      })
+    });
   }
   //** ao selecionar o item no dropdown */
   getSearchCategoria(pageIndex: number, pageSize: number, itemCategoria: string): Observable<{ links: ILinksResponse[]; total: number }> {
@@ -61,30 +57,19 @@ export class HomeService {
       .set('page', pageIndex.toString())
       .set('limit', pageSize.toString())
       .set('categoria', itemCategoria);
-    return this.http.get<{ links: ILinksResponse[]; total: number }>(`${this.urlSearchCategoria}`, { params });
+    return this.http.get<{ links: ILinksResponse[]; total: number }>(`${this.urlSearchCategoria}`, { params,
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}` 
+      })
+     });
   }
   getLink(id: number): Observable<ILinksResponse> {
-    return this.http.get<ILinkRequest>(`${this.url}/id`);
-  }
-  postLink_(request: ILinkRequest): Observable<void> {
-    const auxRequest = {
-      name: request.name,
-      url: request.url,
-      uri: request.uri,
-      categoria: request.categoria,
-      subCategoria: request.subCategoria,
-      descricao: request.descricao,
-      dataEntradaManha: request.dataEntradaManha,
-      dataSaidaManha: request.dataSaidaManha,
-      dataEntradaTarde: request.dataEntradaTarde,
-      dataSaidaTarde: request.dataSaidaTarde,
-      dataEntradaNoite: request.dataEntradaNoite,
-      dataSaidaNoite: request.dataSaidaNoite
-    }
-    return this.http.post<void>(`${this.url}`, auxRequest, {
-      headers: { 'Content-Type': 'application/json' }
+    return this.http.get<ILinkRequest>(`${this.url}/id`, {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}` 
+      })
     });
-  }  
+  }
   postLink(request: ILinkRequest): Observable<ILinksResponse> {
     const auxRequest = {
       name: request.name,
@@ -101,12 +86,26 @@ export class HomeService {
       dataEntradaNoite: request.dataEntradaNoite,
       dataSaidaNoite: request.dataSaidaNoite
     }
-    return this.http.post<ILinksResponse>(`${this.url}`, auxRequest);
+    return this.http.post<ILinksResponse>(`${this.url}`, auxRequest, {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}` 
+      })
+    });
   }
   putLink(request: ILinkRequest): Observable<ILinksResponse> {
-    return this.http.put<ILinksResponse>(`${this.url}/${request.id}`, request );
+    const token = localStorage.getItem('token');
+    return this.http.put<ILinksResponse>(`${this.url}/${request.id}`, request, {
+      headers: new HttpHeaders({
+        'content-type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      })
+    });
   }
   deleteLink(id: number): Observable<ILinksResponse> {
-    return this.http.delete<ILinksResponse>(`${this.url}/${id}`);
+    return this.http.delete<ILinksResponse>(`${this.url}/${id}`, {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}` 
+      })
+    });
   }
 }

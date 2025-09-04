@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -30,6 +30,7 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { TinymceComponent } from '../shared/components/tinymce/tinymce.component';
 import { MatChipsComponent } from '../shared/components/mat-chips/mat-chips.component';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -64,7 +65,10 @@ import { MatChipsComponent } from '../shared/components/mat-chips/mat-chips.comp
     NgxMaskPipe
   ],
   exports: [],
-  providers: [provideNgxMask()],
+  providers: [
+    provideNgxMask(),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
