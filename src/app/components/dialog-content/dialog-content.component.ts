@@ -94,4 +94,14 @@ export class DialogContentComponent implements OnInit {
       error: err => console.error(err)
     });
   }
+  onChipClick(event: MouseEvent): void {
+    const target = event.srcElement as HTMLElement;
+    const url = target?.innerText;
+    if (url) {
+      const tempAnchor = document.createElement('a');
+      tempAnchor.href = url;
+      tempAnchor.target = '_blank';
+      tempAnchor.click();
+    }
+  }
 }

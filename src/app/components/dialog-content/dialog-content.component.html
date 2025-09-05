@@ -62,7 +62,7 @@
         <!-- Uri e URL -->
         <div class="row">
           <div class="col-6">
-            <app-mat-chips formControlName="uri" [(allChips)]="allUris" [label]="'URI'"></app-mat-chips>
+            <app-mat-chips formControlName="uri" [(allChips)]="allUris" [label]="'URI'" (click)="onChipClick($event)"></app-mat-chips>
           </div>
           <div class="col-6">
               <mat-form-field appearance="outline" class="w-100">
