@@ -95,13 +95,21 @@ export class DialogContentComponent implements OnInit {
     });
   }
   onChipClick(event: MouseEvent): void {
-    const target = event.srcElement as HTMLElement;
-    const url = target?.innerText;
-    if (url) {
+    const target = event.target as HTMLElement;
+    const url = target?.innerText.trim();
+    if ( url && this.isValidHttpUrl(url) && !url.endsWith('X') ) {
       const tempAnchor = document.createElement('a');
       tempAnchor.href = url;
       tempAnchor.target = '_blank';
       tempAnchor.click();
     }
   }
+  private isValidHttpUrl(url: string): boolean {
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
 }
