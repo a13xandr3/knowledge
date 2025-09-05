@@ -1,7 +1,6 @@
 export interface ILinkRequest {
     id: number;
     name: string;
-    url: string;
     uri: any;
     categoria: string;
     subCategoria: string;

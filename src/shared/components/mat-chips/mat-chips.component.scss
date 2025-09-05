@@ -1,0 +1,23 @@
+::ng-deep .mdc-evolution-chip-set {
+    display: flex;
+    height: 10vh !important;
+    overflow-y: auto !important;
+}
+/* Largura da barra de rolagem */
+::ng-deep .mdc-evolution-chip-set::-webkit-scrollbar {
+  width: 5px; /* vertical */
+  height: 5px; /* horizontal */
+}
+/* Parte de fundo da barra */
+::ng-deep .mdc-evolution-chip-set::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+/* Parte que se move (thumb) */
+::ng-deep .mdc-evolution-chip-set::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+/* Hover na thumb */
+::ng-deep .mdc-evolution-chip-set::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

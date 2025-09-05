@@ -61,18 +61,8 @@
         </div>
         <!-- Uri e URL -->
         <div class="row">
-          <div class="col-6">
+          <div class="col-12">
             <app-mat-chips formControlName="uri" [(allChips)]="allUris" [label]="'URI'" (click)="onChipClick($event)"></app-mat-chips>
-          </div>
-          <div class="col-6">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Link</mat-label>
-                <input 
-                  matInput 
-                  formControlName="url"
-                  title="lnk"
-                  >
-              </mat-form-field>
           </div>
         </div>
         <!--TimeSheet -- DATAS -->

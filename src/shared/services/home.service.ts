@@ -64,7 +64,7 @@ export class HomeService {
      });
   }
   getLink(id: number): Observable<ILinksResponse> {
-    return this.http.get<ILinkRequest>(`${this.url}/id`, {
+    return this.http.get<ILinkRequest>(`${this.url}/${id}`, {
       headers: new HttpHeaders({
         'Authorization': `Bearer ${token}` 
       })
@@ -73,7 +73,6 @@ export class HomeService {
   postLink(request: ILinkRequest): Observable<ILinksResponse> {
     const auxRequest = {
       name: request.name,
-      url: request.url,
       uri: request.uri,
       categoria: request.categoria,
       subCategoria: request.subCategoria,

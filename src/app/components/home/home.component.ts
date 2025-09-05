@@ -135,7 +135,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
       data: {
         id: obj.id,
         name: obj.name,
-        url: obj.url,
         uri: [obj.uri],
         status: 'alteracao',
         categoria: obj.categoria,

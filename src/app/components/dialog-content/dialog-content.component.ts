@@ -54,7 +54,6 @@ export class DialogContentComponent implements OnInit {
     this.fr = this.fb.group({
       id: [{ value: data?.id || '', disabled: true }],
       name: [data?.name],
-      url: [data?.url],
       uri: [this.linkMapperService.normalizeUris(data)],
       tag: [this.linkMapperService.normalizeTags(data)],
       categoria: [data?.categoria],
