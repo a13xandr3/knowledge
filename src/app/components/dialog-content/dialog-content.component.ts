@@ -38,7 +38,7 @@ export class DialogContentComponent implements OnInit {
   exibeSite: any;
   safeUrl: SafeResourceUrl | undefined;
   currentContent = '';
-
+  
   constructor(
     private service: HomeService,
     private fb: FormBuilder,
@@ -50,7 +50,6 @@ export class DialogContentComponent implements OnInit {
     private loginService: LoginService
   ) 
   {
-    console.log('data ==> ', data);
     this.fr = this.fb.group({
       id: [{ value: data?.id || '', disabled: true }],
       name: [data?.name],
@@ -104,11 +103,11 @@ export class DialogContentComponent implements OnInit {
     }
   }
   private isValidHttpUrl(url: string): boolean {
-  try {
-    const parsedUrl = new URL(url);
-    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
-  } catch {
-    return false;
+    try {
+      const parsedUrl = new URL(url);
+      return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+    } catch {
+      return false;
+    }
   }
-}
 }

@@ -32,6 +32,7 @@
             "styles": [
               "node_modules/bootstrap/scss/bootstrap.scss",
               "@angular/material/prebuilt-themes/indigo-pink.css",
+              "quill/dist/quill.snow.css",
               "src/styles.scss",
               "src/assets/prism/prism.css"
             ],

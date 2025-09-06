@@ -28,9 +28,11 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-import { TinymceComponent } from '../shared/components/tinymce/tinymce.component';
+import { QuillModule } from 'ngx-quill';
+
 import { MatChipsComponent } from '../shared/components/mat-chips/mat-chips.component';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { QuillComponent } from '../shared/components/quill/quill.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,8 +40,8 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
     HeaderComponent,
     FooterComponent,
     DialogContentComponent,
-    TinymceComponent,
-    MatChipsComponent
+    MatChipsComponent,
+    QuillComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,8 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
     MatIconModule,
     MatAutocompleteModule,
     NgxMaskDirective,
-    NgxMaskPipe
+    NgxMaskPipe,
+    QuillModule.forRoot()
   ],
   exports: [],
   providers: [

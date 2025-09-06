@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TinymceComponent } from './tinymce.component';
+import { QuillComponent } from './quill.component';
 
-describe('TinymceComponent', () => {
-  let component: TinymceComponent;
-  let fixture: ComponentFixture<TinymceComponent>;
+describe('QuillComponent', () => {
+  let component: QuillComponent;
+  let fixture: ComponentFixture<QuillComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TinymceComponent ]
+      declarations: [ QuillComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TinymceComponent);
+    fixture = TestBed.createComponent(QuillComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
