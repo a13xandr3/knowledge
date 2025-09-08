@@ -49,11 +49,10 @@ export class LinkMapperService {
   }
   buildRequest(request: any, tags: string[], uris: string[]): any {
     const isTimesheet = request.categoria?.toLowerCase() === 'timesheet';
-    const toISO = (dt: any) => isTimesheet ? this.ISODate(dt) : null;
+    const toISO = (dt: any) => isTimesheet ? this.ISODate(dt?.replace(',', '')) : null;
     return {
       id: request.id,
       name: request.name,
-      url: request.url,
       uri: { uris },
       categoria: request.categoria ? this.toTitleCase(request.categoria) : '',
       subCategoria: request.subCategoria ? this.toTitleCase(request.subCategoria) : '',

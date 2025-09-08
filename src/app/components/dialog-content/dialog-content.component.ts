@@ -17,6 +17,7 @@ import { LinkStateService } from '../../../shared/state/link-state-service';
 import { HomeService } from '../../../shared/services/home.service';
 import { DatePipe } from '@angular/common';
 import { LoginService } from 'src/shared/services/login.service';
+import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-dialog-content',
   templateUrl: './dialog-content.component.html',
@@ -50,6 +51,7 @@ export class DialogContentComponent implements OnInit {
     private loginService: LoginService
   ) 
   {
+    console.log('dados da base ==> ', data);
     this.fr = this.fb.group({
       id: [{ value: data?.id || '', disabled: true }],
       name: [data?.name],
@@ -89,7 +91,11 @@ export class DialogContentComponent implements OnInit {
         this.linkStateService.triggerRefresh();
         this.dialogRef.close(dados);
       },
-      error: err => console.error(err)
+      error: (err: HttpErrorResponse) => {
+        this.snackService.mostrarMensagem(
+          err.message, 'Fechar'
+        );
+      }
     });
   }
   onChipClick(event: MouseEvent): void {

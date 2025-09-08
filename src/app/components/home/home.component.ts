@@ -24,6 +24,7 @@ import { SnackService } from './../../../shared/services/snack.service';
 import arquivo from '../../../assets/data/arquivo.json';
 
 import { DialogContentComponent } from '../dialog-content/dialog-content.component';
+import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -122,8 +123,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
         this.links = lnk;
         this.totalLinks = response.total;
       },
-      error: (err: any) => {
-        console.error(err);
+      error: (err: HttpErrorResponse) => {
+        this.snackService.mostrarMensagem(
+          err.message, 'Fechar'
+        );
       }
     });
   }
@@ -162,7 +165,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
         this.mostrarMensagem('Card excluido com sucesso!', 'Fechar');
         this.atualizarLista();
       },
-      error: (err: any) => console.error(err)
+      error: (err: HttpErrorResponse) => {
+        this.snackService.mostrarMensagem(
+          err.message, 'Fechar'
+        );
+      }
     });
   }
   mostrarMensagem(msg: string, action: any): void {

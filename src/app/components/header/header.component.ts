@@ -1,8 +1,10 @@
+import { SnackService } from './../../../shared/services/snack.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogContentComponent } from '../dialog-content/dialog-content.component';
 import { HomeService } from '../../../shared/services/home.service';
 import { LinkStateService } from '../../../shared/state/link-state-service';
+import { HttpErrorResponse } from '@angular/common/http';
 export interface ICategoria {
   id: number;
   categoria: string;
@@ -29,6 +31,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     private homeService: HomeService,
     private linkStateService: LinkStateService,
+    private snackService: SnackService,
     private dialog: MatDialog) {
       this.linkStateService.triggerRefresh();
     }
@@ -114,8 +117,10 @@ export class HeaderComponent implements OnInit {
         this.tg.sort((a: any, b: any) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
         this.tg.unshift('todos');
       },
-      error: (err: any) => {
-        console.log(err);
+      error: (err: HttpErrorResponse) => {
+        this.snackService.mostrarMensagem(
+          err.message, 'Fechar'
+        );
       }
     });
   }
@@ -127,8 +132,10 @@ export class HeaderComponent implements OnInit {
         this.links.sort((a: any, b: any) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
         this.links.unshift('todos');
       },
-      error: (err: any) => {
-        console.log(err);
+      error: (err: HttpErrorResponse) => {
+        this.snackService.mostrarMensagem(
+          err.message, 'Fechar'
+        );
       }
     });
   }
