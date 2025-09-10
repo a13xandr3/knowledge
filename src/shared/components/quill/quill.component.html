@@ -1,1 +1,13 @@
-<div #editorContainer class="quill-editor-container" style="min-height:150px;"></div>
+<!-- quill.component.html -->
+<quill-editor
+  #editor
+  [placeholder]="placeholder"
+  [modules]="quillConfiguration"
+  (onEditorCreated)="onEditorCreated($event)"
+  (onContentChanged)="onContentChanged($event)"
+  (onBlur)="onBlur()"
+  (onFocus)="onFocus()"
+  [styles]="{ 
+    'min-height': '250px' 
+  }"
+></quill-editor>

@@ -26,13 +26,14 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-import { EditorModule } from '@tinymce/tinymce-angular';
+import { QuillModule, QuillModules } from 'ngx-quill';
+
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-import { QuillModule } from 'ngx-quill';
 
 import { MatChipsComponent } from '../shared/components/mat-chips/mat-chips.component';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { QuillComponent } from '../shared/components/quill/quill.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,28 +45,38 @@ import { QuillComponent } from '../shared/components/quill/quill.component';
     QuillComponent
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
     BrowserAnimationsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatRadioModule,
-    MatSnackBarModule,
+    BrowserModule,
     FormsModule,
-    MatPaginatorModule,
-    MatTableModule,
-    EditorModule,
-    MatChipsModule,
-    MatIconModule,
+    HttpClientModule,
     MatAutocompleteModule,
+    MatButtonModule,
+    MatChipsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    MatTableModule,
     NgxMaskDirective,
     NgxMaskPipe,
-    QuillModule.forRoot()
+    QuillModule.forRoot({
+      customOptions: [
+        {
+          import: 'formats/font',
+          whitelist: ['Alumni', 'Poppins', 'Raleway']
+        },
+        {
+          import: 'formats/size',
+          whitelist: ['8px', '10px', '12px', '14px', '16px', '18px', '20px', '36px', '72px']
+        }
+      ] as QuillModules['customOptions']
+    }),
+    ReactiveFormsModule,
   ],
   exports: [],
   providers: [

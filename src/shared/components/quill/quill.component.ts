@@ -1,13 +1,14 @@
-import { 
-  AfterViewInit, 
-  Component, 
-  ElementRef, 
-  forwardRef, 
-  OnDestroy, 
-  ViewChild,
-  ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  forwardRef,
+  Input,
+  OnDestroy
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
 import Quill from 'quill';
+import { QuillConfiguration } from './quill-configuration';
+import type { EditorChangeContent } from 'ngx-quill';
 
 @Component({
   selector: 'app-quill',
@@ -21,59 +22,82 @@ import Quill from 'quill';
     }
   ]
 })
-export class QuillComponent implements ControlValueAccessor, AfterViewInit, OnDestroy {
+export class QuillComponent implements ControlValueAccessor, OnDestroy {
+  @Input() placeholder = '';
 
-  @ViewChild('editorContainer', { static: false }) editorContainer!: ElementRef<HTMLDivElement>;
+  quillConfiguration = QuillConfiguration.modules;
 
   private quill: Quill | null = null;
   private _value = '';
+  private isSettingContents = false;
+  private _disabled = false;
 
-  // callbacks do Angular Forms
+  // Angular form callbacks
   private onChange: (v: string) => void = () => {};
   private onTouched: () => void = () => {};
 
-  private isSettingContents = false; // evita loops
+  constructor() {
 
-  constructor(private cdr: ChangeDetectorRef) { }
+    try {
+      const Font = Quill.import('attributors/class/font');
+      Font.whitelist = [];
+      Quill.register(Font, true);
+    } catch (e) {
+      console.warn('Size attributor not available', e);
+    }
+    try {
+      const Size = Quill.import('attributors/style/size');
+      Size.whitelist = [];
+      Quill.register(Size, true);
+    } catch (e) {
+      console.warn('Size attributor not available', e);
+    }
 
-  ngAfterViewInit(): void {
-    this.quill = new Quill(this.editorContainer.nativeElement, {
-      theme: 'snow',
-      placeholder: 'Escreva aqui...',
-      modules: {
-        toolbar: [
-          ['bold', 'italic', 'underline'],
-          [{ list: 'ordered' }, { list: 'bullet' }],
-          ['link', 'image']
-        ]
-      }
-    });
+  }
 
-// se já tivemos um valor vindo do form antes da criação, aplica agora
+  // chamado pelo (onEditorCreated) do ngx-quill
+  onEditorCreated(quillInstance: Quill) {
+    this.quill = quillInstance;
+
+    // se existia valor antes da criação do editor, aplica agora
     if (this._value) {
       this.setEditorHtmlSilent(this._value);
     }
 
-    // escuta alterações do editor e propaga para o FormControl
-    this.quill.on('text-change', () => {
-      if (this.isSettingContents) return; // prevenir reentrância quando setamos conteúdo programaticamente
+    // respeitar estado disabled se aplicado antes da criação
+    if (this._disabled) {
+      this.quill.enable(false);
+    }
+  }
 
-      const html = this.quill!.root.innerHTML;
-      // trata conteúdo "vazio" do Quill (linha em branco)
+  // chamado pelo (onContentChanged) do ngx-quill
+  onContentChanged(event: EditorChangeContent | any) {
+
+    if (this.isSettingContents) return;
+    if (!event) return;
+
+    // só propaga mudanças feitas pelo usuário (evita loops com setContents('silent'))
+    if (event.source === 'user') {
+      const html = event.html ?? '';
       const value = (html === '<p><br></p>') ? '' : html;
       this._value = value;
       this.onChange(this._value);
-    });
-
-    // importante para garantir que Angular detecte mudanças depois da criação do editor
-    this.cdr.detectChanges();
+    }
   }
 
-  // writeValue pode ser chamado antes ou depois da inicialização do editor
+  // marcar como "tocado"
+  onBlur() {
+    this.onTouched();
+  }
+
+  onFocus() {
+    // opcional: lógica ao focar
+  }
+
+  // ControlValueAccessor
   writeValue(value: string | null): void {
     this._value = value ?? '';
     if (this.quill) {
-      // se editor já existe, aplica *silenciosamente* para não disparar 'text-change' indesejado
       this.setEditorHtmlSilent(this._value);
     }
   }
@@ -87,35 +111,33 @@ export class QuillComponent implements ControlValueAccessor, AfterViewInit, OnDe
   }
 
   setDisabledState(isDisabled: boolean): void {
+    this._disabled = isDisabled;
     if (this.quill) {
       this.quill.enable(!isDisabled);
     }
   }
 
-  // função utilitária para aplicar HTML ao editor sem disparar text-change
+  // aplica HTML ao editor sem disparar eventos do Quill
   private setEditorHtmlSilent(html: string) {
     if (!this.quill) return;
     this.isSettingContents = true;
     try {
       if (!html) {
-        this.quill.setContents(this.quill.clipboard.convert(''), 'silent');
+        // limpa o editor mantendo o placeholder
+        //this.quill.setContents([{ insert: '\n' }], 'silent');
+        this.quill.setText('', 'silent');
       } else {
         const delta = this.quill.clipboard.convert(html);
         this.quill.setContents(delta, 'silent');
       }
     } finally {
-      // pequeno timeout evita condições de corrida com eventos internos do Quill
-      setTimeout(() => {
-        this.isSettingContents = false;
-      }, 0);
+      // pequeno timeout para garantir que event loop interna do Quill finalize
+      setTimeout(() => (this.isSettingContents = false), 0);
     }
   }
 
   ngOnDestroy(): void {
-    // cleanup
-    if (this.quill) {
-      try { (this.quill as any).off && (this.quill as any).off(); } catch {}
-      this.quill = null;
-    }
+    // cleanup mínimo; ngx-quill lida com o restante
+    this.quill = null;
   }
 }

@@ -1,9 +1,29 @@
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.bubble.css';
+@import '~quill/dist/quill.snow.css';
+
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";  /* required */
 @import "~bootstrap/dist/css/bootstrap.css";  /* optional for better look */
 
 @font-face {
-  font-family: "poppins-regular";
-  src: url(./assets/Poppins/Poppins-Regular.ttf);
+  font-family: "Alumni";
+  src: url('/public/fonts/Alumni_Sans_Pinstripe/AlumniSansPinstripe-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url('/public/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Raleway";
+  src: url('/public/fonts/Raleway/Raleway-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
 }
 
 *,
@@ -12,8 +32,8 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "poppins-regular" !important;
-  font-size: 0.77rem !important;
+  //font-family: "Raleway" !important;
+  //font-size: 0.77rem !important;
 }
 
 html,
@@ -75,3 +95,89 @@ body {
   margin: 0; 
 }
 
+[quill-editor-toolbar] .ql-font span[data-label="Alumni"]::before {
+  font-family: "Alumni";
+}
+
+.ql-font-Alumni {
+  font-family: "Alumni";
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=Alumni]::before, .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=Alumni]::before {
+  content: 'Alumni';
+}
+
+/**/
+
+[quill-editor-toolbar] .ql-font span[data-label="Poppins"]::before {
+  font-family: "Poppins";
+}
+
+.ql-font-Poppins {
+  font-family: "Poppins";
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=Poppins]::before, .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=Poppins]::before {
+  content: 'Poppins';
+}
+
+/**/
+
+[quill-editor-toolbar] .ql-font span[data-label="Raleway"]::before {
+  font-family: "Raleway";
+}
+
+.ql-font-Raleway {
+  font-family: "Raleway";
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=Raleway]::before, .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=Raleway]::before {
+  content: 'Raleway';
+}
+
+/* Tamanhos do dropdown de font-size */
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="8px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="8px"]::before {
+  content: "8px";
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="10px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="10px"]::before {
+  content: "10px";
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="12px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="12px"]::before {
+  content: "12px";
+}
+
+/* Repita para todos os tamanhos da whitelist */
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="14px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14px"]::before { 
+  content: "14px"; 
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="16px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="16px"]::before { 
+  content: "16px"; 
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="18px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="18px"]::before { 
+  content: "18px"; 
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="20px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="20px"]::before { 
+  content: "20px"; 
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="36px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="36px"]::before { 
+  content: "36px"; 
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="72px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="72px"]::before { 
+  content: "72px"; 
+}
