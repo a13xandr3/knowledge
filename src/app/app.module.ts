@@ -26,7 +26,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-import { QuillModule, QuillModules } from 'ngx-quill';
+import { QuillModule } from 'ngx-quill';
 
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
@@ -66,15 +66,9 @@ import { QuillComponent } from '../shared/components/quill/quill.component';
     NgxMaskPipe,
     QuillModule.forRoot({
       customOptions: [
-        {
-          import: 'formats/font',
-          whitelist: ['Alumni', 'Poppins', 'Raleway']
-        },
-        {
-          import: 'formats/size',
-          whitelist: ['8px', '10px', '12px', '14px', '16px', '18px', '20px', '36px', '72px']
-        }
-      ] as QuillModules['customOptions']
+        { import: 'formats/font', whitelist: ['Alumni', 'Poppins', 'Raleway'] },
+        { import: 'formats/size', whitelist: ['8px', '10px', '12px', '14px', '16px', '18px', '20px', '36px', '72px'] }
+      ]
     }),
     ReactiveFormsModule,
   ],

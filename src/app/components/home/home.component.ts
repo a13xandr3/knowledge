@@ -3,10 +3,8 @@ import {
   AfterViewInit, 
   Component, 
   Input, 
-  OnChanges, 
   OnDestroy, 
   OnInit, 
-  SimpleChanges, 
   ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
@@ -30,7 +28,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   categoriaExcessao = arquivo.categoriaExcessao;
   @Input() titulo!: string;
   itemModificadoCategoria: string = '';
@@ -74,9 +72,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes ==> ', changes);
   }
   private subscreverComportamentos(): void {
     this.comportamentoService.comportamentos$
@@ -156,6 +151,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.atualizarLista();
+        dialogRef.close();
       }
     });
   }

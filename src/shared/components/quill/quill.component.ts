@@ -36,46 +36,31 @@ export class QuillComponent implements ControlValueAccessor, OnDestroy {
   private onChange: (v: string) => void = () => {};
   private onTouched: () => void = () => {};
 
-  constructor() {
-
-    try {
-      const Font = Quill.import('attributors/class/font');
-      Font.whitelist = [];
-      Quill.register(Font, true);
-    } catch (e) {
-      console.warn('Size attributor not available', e);
-    }
-    try {
-      const Size = Quill.import('attributors/style/size');
-      Size.whitelist = [];
-      Quill.register(Size, true);
-    } catch (e) {
-      console.warn('Size attributor not available', e);
-    }
-
-  }
+  constructor() {}
 
   // chamado pelo (onEditorCreated) do ngx-quill
   onEditorCreated(quillInstance: Quill) {
     this.quill = quillInstance;
-
-    // se existia valor antes da criação do editor, aplica agora
-    if (this._value) {
-      this.setEditorHtmlSilent(this._value);
-    }
-
-    // respeitar estado disabled se aplicado antes da criação
     if (this._disabled) {
       this.quill.enable(false);
     }
+    const applyHtml  = () => {
+      if (!this._value) return;
+      try {
+        const delta = this.quill?.clipboard.convert(this._value) as any;
+        this.quill?.setContents(delta, 'silent');
+      } catch (err) {
+        console.log('Erro ao converter HTML -> Delta', err);
+      }
+    };
+    // Se o modal tiver animação / o editor pode estar invisível, espere um pouco.
+    // Ajuste o timeout se necessário ou dispare após evento 'modal opened'
+    setTimeout(applyHtml, 200);
   }
-
   // chamado pelo (onContentChanged) do ngx-quill
   onContentChanged(event: EditorChangeContent | any) {
-
     if (this.isSettingContents) return;
     if (!event) return;
-
     // só propaga mudanças feitas pelo usuário (evita loops com setContents('silent'))
     if (event.source === 'user') {
       const html = event.html ?? '';
@@ -84,16 +69,13 @@ export class QuillComponent implements ControlValueAccessor, OnDestroy {
       this.onChange(this._value);
     }
   }
-
   // marcar como "tocado"
   onBlur() {
     this.onTouched();
   }
-
   onFocus() {
     // opcional: lógica ao focar
   }
-
   // ControlValueAccessor
   writeValue(value: string | null): void {
     this._value = value ?? '';
@@ -101,22 +83,18 @@ export class QuillComponent implements ControlValueAccessor, OnDestroy {
       this.setEditorHtmlSilent(this._value);
     }
   }
-
   registerOnChange(fn: (v: string) => void): void {
     this.onChange = fn;
   }
-
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
-
   setDisabledState(isDisabled: boolean): void {
     this._disabled = isDisabled;
     if (this.quill) {
       this.quill.enable(!isDisabled);
     }
   }
-
   // aplica HTML ao editor sem disparar eventos do Quill
   private setEditorHtmlSilent(html: string) {
     if (!this.quill) return;
@@ -135,7 +113,6 @@ export class QuillComponent implements ControlValueAccessor, OnDestroy {
       setTimeout(() => (this.isSettingContents = false), 0);
     }
   }
-
   ngOnDestroy(): void {
     // cleanup mínimo; ngx-quill lida com o restante
     this.quill = null;
