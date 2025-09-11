@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { interval, map, Observable, takeWhile, timer } from 'rxjs';
 import { ILinkRequest } from 'src/shared/request/request';
 
 @Injectable({
@@ -66,5 +67,25 @@ export class LinkMapperService {
       dataSaidaNoite: toISO(request?.dataSaidaNoite)
     };
   }
-
+  /**
+   * Cria um observable que emite o tempo restante em segundos até chegar a zero.
+   * 
+   * @param durationMs Duração total em milissegundos
+   * @returns Observable<number> que emite a contagem regressiva em segundos
+   */
+  countdown_(durationMs: number): Observable<number> {
+    const totalSeconds = Math.floor(durationMs / 1000);
+    return interval(1000).pipe(
+      map(elapsed => totalSeconds - elapsed),
+      takeWhile(remaining => remaining >= 0)
+    );
+  }
+  countdown(durationMs: number): Observable<number> {
+    const end = Date.now() + Math.max(0, Math.floor(durationMs));
+    // timer(0, 1000) -> primeira emissão imediata
+    return timer(0, 1000).pipe(
+      map(() => Math.max(0, end - Date.now())),
+      takeWhile(remainingMs => remainingMs >= 0)
+    );
+  }
 }

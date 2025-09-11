@@ -33,6 +33,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { MatChipsComponent } from '../shared/components/mat-chips/mat-chips.component';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { QuillComponent } from '../shared/components/quill/quill.component';
+import { DurationPipe } from '../shared/pipe/duration.pipe';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { QuillComponent } from '../shared/components/quill/quill.component';
     FooterComponent,
     DialogContentComponent,
     MatChipsComponent,
-    QuillComponent
+    QuillComponent,
+    DurationPipe
   ],
   imports: [
     AppRoutingModule,

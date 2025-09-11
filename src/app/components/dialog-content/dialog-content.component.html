@@ -7,6 +7,9 @@
               {{ data.status === 'inclusao' ? 'Inclusão' : 'Alteração' }}
               {{ data.status !== 'inclusao' ? ' - ID: ' + this.fr.get('id')?.value : '' }}
             </h2>
+            <div *ngIf="tempoRestanteMs >= 0">
+              <p>Tempo restante: {{ tempoRestanteMs | duration }}</p>
+            </div>
           </div>
         </div>
         <div class="row">

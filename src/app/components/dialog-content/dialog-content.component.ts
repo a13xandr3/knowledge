@@ -4,6 +4,7 @@ import {
   Component, 
   ElementRef, 
   Inject, 
+  OnDestroy, 
   OnInit, 
   Optional, 
   ViewChild } from '@angular/core';
@@ -18,14 +19,15 @@ import { HomeService } from '../../../shared/services/home.service';
 import { DatePipe } from '@angular/common';
 import { LoginService } from 'src/shared/services/login.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-dialog-content',
   templateUrl: './dialog-content.component.html',
   styleUrls: ['./dialog-content.component.scss'],
   providers: [DatePipe]
 })
-export class DialogContentComponent implements OnInit {
-
+export class DialogContentComponent implements OnInit, OnDestroy {
+  tempoRestanteMs: number = 0;
   separatorKeysCodes: number[] = [ENTER, COMMA];  //chip
   
   allTags: string[] = [];                         //Tags
@@ -40,6 +42,8 @@ export class DialogContentComponent implements OnInit {
   safeUrl: SafeResourceUrl | undefined;
   currentContent = '';
   
+  private sub?: Subscription;
+  
   constructor(
     private service: HomeService,
     private fb: FormBuilder,
@@ -51,7 +55,7 @@ export class DialogContentComponent implements OnInit {
     private loginService: LoginService
   ) 
   {
-    console.log('dados da base ==> ', data);
+    this.iniciarContagem(86400000); // exemplo: 10 segundos (10000 ms)
     this.fr = this.fb.group({
       id: [{ value: data?.id || '', disabled: true }],
       name: [data?.name],
@@ -71,6 +75,9 @@ export class DialogContentComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+  }
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
   fechar() {
     this.dialogRef.close();
@@ -115,5 +122,12 @@ export class DialogContentComponent implements OnInit {
     } catch {
       return false;
     }
+  }
+  iniciarContagem(ms: number): void {
+    this.sub?.unsubscribe();
+    this.sub = this.linkMapperService.countdown(ms).subscribe({
+      next: remainingMs => this.tempoRestanteMs = remainingMs,
+      complete: () => console.log('Contagem finalizada!')
+    });
   }
 }
