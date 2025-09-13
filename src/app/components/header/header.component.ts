@@ -24,6 +24,7 @@ function isTagObject(v: any): v is { tags: unknown } {
 export class HeaderComponent implements OnInit {
   @Output() itemSelecionadoEvent = new EventEmitter<string>();
   @Input() titulo!: string;
+  @Input() totalHoras!: any;
   links: string[] = [];
   tg: string[] = [];
   selectedItemCategory: string = '';

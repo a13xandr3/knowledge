@@ -34,6 +34,7 @@ import { MatChipsComponent } from '../shared/components/mat-chips/mat-chips.comp
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { QuillComponent } from '../shared/components/quill/quill.component';
 import { DurationPipe } from '../shared/pipe/duration.pipe';
+import { HoraFormatadaPipe } from '../shared/pipe/hora-formatada.pipe';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { DurationPipe } from '../shared/pipe/duration.pipe';
     DialogContentComponent,
     MatChipsComponent,
     QuillComponent,
-    DurationPipe
+    DurationPipe,
+    HoraFormatadaPipe
   ],
   imports: [
     AppRoutingModule,

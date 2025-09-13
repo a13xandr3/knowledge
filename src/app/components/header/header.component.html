@@ -28,5 +28,13 @@
         <button class="incluir-btn" (click)="abrirDialog()">Incluir</button>
       </div>
     </div>
+
+    <div class="row" *ngIf="this.selectedItemCategory.toLowerCase() === 'timesheet' ">
+      <div class="col-12">
+        <span>Total Horas: </span>
+        <span>{{ totalHoras | horaFormatada }}</span>
+      </div>
+    </div>
+
   </div>
 </header>
