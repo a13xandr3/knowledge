@@ -107,4 +107,19 @@ export class HomeService {
       })
     });
   }
+  calcularHoras(entrada: any, saida: any): number {
+    const start = new Date(entrada).getTime();
+    const end = new Date(saida).getTime();
+    const diffMs = end - start;                   // diferença em milissegundos
+    return diffMs / (1000 * 60 * 60);             // converte para horas
+  }
+  totalHorasTimeSheet(reg: any): number {
+    let total = 0;
+    reg.forEach((e: any) => {
+      total += this.calcularHoras(e.dataEntradaManha, e.dataSaidaManha);
+      total += this.calcularHoras(e.dataEntradaTarde, e.dataSaidaTarde);
+      total += this.calcularHoras(e.dataEntradaNoite, e.dataSaidaNoite);
+    });
+    return total;
+  }
 }

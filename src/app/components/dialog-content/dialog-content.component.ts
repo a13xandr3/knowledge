@@ -41,6 +41,8 @@ export class DialogContentComponent implements OnInit, OnDestroy {
   exibeSite: any;
   safeUrl: SafeResourceUrl | undefined;
   currentContent = '';
+
+  totalHorasDia!: string;
   
   private sub?: Subscription;
   
@@ -55,7 +57,12 @@ export class DialogContentComponent implements OnInit, OnDestroy {
     private loginService: LoginService
   ) 
   {
-    this.iniciarContagem(86400000); // exemplo: 10 segundos (10000 ms)
+    this.iniciarContagem(86400000); // 24 horas
+
+    if ( this.data?.categoria.toLowerCase() == 'timesheet' ) {
+      this.totalHorasDia = data?.totalHorasDia;
+    }
+
     this.fr = this.fb.group({
       id: [{ value: data?.id || '', disabled: true }],
       name: [data?.name],

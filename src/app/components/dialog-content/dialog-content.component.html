@@ -69,6 +69,9 @@
           </div>
         </div>
         <!--TimeSheet -- DATAS -->
+        <div class="row">
+          <div class="col-12"> {{ totalHorasDia }}</div>
+        </div>
         <div
           class="row" 
           *ngIf="this.fr.get('categoria')?.value.toLowerCase() == 'timesheet' ">

@@ -84,15 +84,17 @@ export class HeaderComponent implements OnInit {
         name: '',
         uri: [],
         tag: [],
+        totalHorasDia: 0,
         status: 'inclusao',
-        categoria: '',
+        categoria: this.selectedItemCategory,
         descricao: '',
         dataEntradaManha: this.ISODate(this.brDate()),
         dataSaidaManha: this.ISODate(this.brDate()),
         dataEntradaTarde: this.ISODate(this.brDate()),
         dataSaidaTarde: this.ISODate(this.brDate()),
         dataEntradaNoite: this.ISODate(this.brDate()),
-        dataSaidaNoite: this.ISODate(this.brDate())
+        dataSaidaNoite: this.ISODate(this.brDate()),
+
       }
     });
     dialogRef.afterClosed().subscribe((result) => {

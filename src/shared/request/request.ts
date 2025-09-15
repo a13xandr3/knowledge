@@ -6,16 +6,27 @@ export interface ILinkRequest {
     subCategoria: string;
     descricao: string;
     tag: any;
+    horas: unknown;
     oldCategoria?: string;
     showSite?: boolean
-    dataEntradaManha: string | null;
-    dataSaidaManha: string | null;
-    dataEntradaTarde: string | null;
-    dataSaidaTarde: string | null;
-    dataEntradaNoite: string | null;
-    dataSaidaNoite: string | null;
+    dataEntradaManha: string;
+    dataSaidaManha: string;
+    dataEntradaTarde: string;
+    dataSaidaTarde: string;
+    dataEntradaNoite: string;
+    dataSaidaNoite: string;
+    totalHorasDia?: number;
 }
 
 export interface IactionStatus extends ILinkRequest {
     status: string;
 }
+
+export interface Timesheet {
+    dataEntradaManha: string;
+    dataSaidaManha: string;
+    dataEntradaTarde: string;
+    dataSaidaTarde: string;
+    dataEntradaNoite: string;
+    dataSaidaNoite: string;
+};

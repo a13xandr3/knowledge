@@ -133,3 +133,25 @@ form {
 ::ng-deep .mdc-text-field__input {
     font-size: 0.82rem !important;
 }
+
+::ng-deep .mdc-evolution-chip, 
+.mdc-evolution-chip__cell, 
+.mdc-evolution-chip__action {
+    display: inline-flex;
+    align-items: center;
+    height: 20px !important;
+    font-size: 0.8rem !important;
+}
+
+::ng-deep .mat-icon {
+    -webkit-user-select: none;
+    user-select: none;
+    background-repeat: no-repeat;
+    display: inline-block;
+    fill: currentColor;
+    height: 24px;
+    width: 24px;
+    overflow: hidden;
+    color: red;
+    font-size: 0.8rem !important;
+}
