@@ -2,7 +2,7 @@
   <div class="container-fluid w-100 body">
       <form [formGroup]="fr" (ngSubmit)="salvar()" class="form-layout">
         <div class="row">
-          <div class="col-12">
+          <div class="col-12 linha">
             <h2 mat-dialog-title class="dialog-title knowledge-base">
               {{ data.status === 'inclusao' ? 'Inclusão' : 'Alteração' }}
               {{ data.status !== 'inclusao' ? ' - ID: ' + this.fr.get('id')?.value : '' }}

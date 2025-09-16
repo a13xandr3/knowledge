@@ -1,24 +1,14 @@
-.campo {
-    width: 100%;
+.mat-mdc-dialog-content {
+    max-height: 100vh !important;
+    height: 100vh !important;
 }
-
-.half {
-    width: 50%;
-}
-
-
-:host .mdc-dialog__title {
-    padding: 0 9px 0 9px !important;
-}
-
-:host .mat-mdc-dialog-container .mdc-dialog__title {
+.mat-mdc-dialog-container .mdc-dialog__title {
     font-family: var(--mdc-dialog-subhead-font);
     line-height: var(--mdc-dialog-subhead-line-height, 14px);
     font-size: var(--mdc-dialog-subhead-size, 14px);
     font-weight: var(--mdc-dialog-subhead-weight, 500);
     letter-spacing: var(--mdc-dialog-subhead-tracking, 1px);
 }
-
 .knowledge-base {
   font-size: 1rem !important;
   font-weight: 700;
@@ -29,129 +19,35 @@
     -1px -1px 1px rgba(255,255,255,0.4); /* leve brilho para alto relevo */
     letter-spacing: 0.5rem;
 }
-
-:host .mat-h2, .mat-headline-6, .mat-typography .mat-h2, .mat-typography .mat-headline-6, .mat-typography h2 {
-    margin: 0 !important;
-}
-
-.body {
-    max-height: 100vh !important;
-    height: 90vh !important;
-}
-
-form {
-    max-height: 81vh !important;
-    height: 81vh !important;
-}
-
-::ng-deep .ql-editor .ql-video {
-    display: block;
-    max-width: 100%;
-    width: 100% !important;
-}
-
-::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
-    background-color: #fff !important; 
-}
-
-::ng-deep .mat-mdc-chip-input {
-    background-color: #fff !important;
-}
-
-::ng-deep .mat-mdc-form-field-infix, .mat-mdc-text-field-wrapper .mdc-text-field .mdc-text-field--filled {
-    background-color: #fff !important;
-}
-
-::ng-deep .mat-mdc-form-field .ng-star-inserted .mat-mdc-form-field-type-mat-chip-grid .mat-form-field-appearance-fill .mat-mdc-form-field-label-always-float {
-    background-color: #fff !important;
-}
-
-::ng-deep  .mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
-    opacity: 0 !important;
-}
-
-::ng-deep  .mat-mdc-form-field.mat-focused:hover .mat-mdc-form-field-focus-overlay:hover {
-    opacity: 0 !important;
-}
-
-::ng-deep .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
-    padding-top: 1vh !important;
-    padding-bottom: 1vh !important;
-}
-
-::ng-deep .mat-mdc-form-field-infix {
-    min-height: 1vh !important;
-}
-
-::ng-deep .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
-    top: 20px !important;
-    font-size: 0.7rem !important;
-}
-
-::ng-deep .mdc-text-field .mdc-floating-label {
-    //top: 0% !important;
-    //transform: translateY(-100%) !important;
-    pointer-events: none;
-}
-
-::ng-deep .mdc-floating-label {
-    position: absolute;
-    left: 0;
-    -webkit-transform-origin: left top;
-    transform-origin: left top;
-    line-height: 0.6rem !important;
+::ng-deep .ql-editor {
+    box-sizing: border-box;
+    line-height: 1.42;
+    height: 31vh !important;
+    outline: none;
+    overflow-y: auto;
+    padding: 12px 15px;
+    tab-size: 4;
+    -moz-tab-size: 4;
     text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: text;
-    overflow: hidden;
-    will-change: transform;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
-
-::ng-deep .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-text-field__input {
-    display: inline-block !important;
-    align-items: center !important;
-    //display: flex !important;
-    padding: 0 0 0 0 !important;
-    font-size: 0.85rem;
+.linha {
+    height: 14vh !important;
 }
-
-:host .mat-mdc-dialog-content {
-    max-height: 100vh !important;
-    height: 100vh !important;
+::ng-deep .mdc-dialog__title {
+    display: block;
+    margin-top: 0;
+    position: relative;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    margin: 0 0 1px;
+    padding: 0 !important;
 }
-
-::ng-deep .mat-mdc-dialog-content {
-    max-height: 100vh !important;
-    height: 100vh !important;
-}
-
-.w-16 {
-    width: 16.6% !important;
-}
-
-::ng-deep .mdc-text-field__input {
-    font-size: 0.82rem !important;
-}
-
-::ng-deep .mdc-evolution-chip, 
-.mdc-evolution-chip__cell, 
-.mdc-evolution-chip__action {
-    display: inline-flex;
-    align-items: center;
-    height: 20px !important;
-    font-size: 0.8rem !important;
-}
-
-::ng-deep .mat-icon {
-    -webkit-user-select: none;
-    user-select: none;
-    background-repeat: no-repeat;
-    display: inline-block;
-    fill: currentColor;
-    height: 24px;
-    width: 24px;
-    overflow: hidden;
-    color: red;
-    font-size: 0.8rem !important;
+::ng-deep .mat-h2, 
+::ng-deep .mat-headline-6, 
+::ng-deep .mat-typography .mat-h2, 
+::ng-deep .mat-typography .mat-headline-6, 
+::ng-deep .mat-typography h2 {
+    margin: 0 !important;
 }
