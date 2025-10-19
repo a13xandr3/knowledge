@@ -19,5 +19,17 @@
 }
 /* Hover na thumb */
 ::ng-deep .mdc-evolution-chip-set::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  //background: #555;
+  background: rgba(0, 0, 0, 0.02);
+}
+::ng-deep .mat-mdc-chip-set .mdc-evolution-chip-set__chips {
+    min-width: 100%;
+    //background: rgba(0, 0, 0, 0.02) !important;
+}
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background: rgba(0, 0, 0, 0.02) !important;
+    border-top: 1px solid !important;
+    border-left: 1px solid !important;
+    border-right: 1px solid !important;
+    border-radius: 10px !important;
 }

@@ -1,8 +1,19 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { 
+  Component, 
+  Input, 
+  Output, 
+  EventEmitter, 
+  AfterViewInit, 
+  OnChanges, 
+  SimpleChanges, 
+  forwardRef, 
+  OnInit, 
+  ElementRef, 
+  ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInput, MatChipInputEvent } from '@angular/material/chips';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { map, Observable, startWith } from 'rxjs';
 
 @Component({
@@ -17,26 +28,24 @@ import { map, Observable, startWith } from 'rxjs';
     }
   ]
 })
-export class MatChipsComponent implements ControlValueAccessor, OnInit {
-
+export class MatChipsComponent implements ControlValueAccessor, OnInit, OnChanges {
   @Input() public label!: string;
-
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  chipCtrl = new FormControl('');
-  filteredChips!: Observable<string[]>;
-
-  chips: string[] = [];
-  
-  private _allChips: string[] = [];
-
   @Input() 
   set allChips(v: string[] | undefined) {
     this._allChips = v ? v.slice() : [];
   }
-  get allChips(): string[] { return this._allChips; }
-
-  @ViewChild('chipInput') chipInput!: ElementRef<HTMLInputElement>;
   @Output() allChipsChange = new EventEmitter<string[]>();
+  
+  @ViewChild('chipInput') chipInput!: ElementRef<HTMLInputElement>;
+
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  chipCtrl = new FormControl('');
+  filteredChips!: Observable<string[]>;
+  chips: string[] = [];
+  
+  private _allChips: string[] = [];
+
+  get allChips(): string[] { return this._allChips; }
   
   constructor() {
     this.filteredChips = this.chipCtrl.valueChanges.pipe(
@@ -47,6 +56,21 @@ export class MatChipsComponent implements ControlValueAccessor, OnInit {
 
   ngOnInit(): void {}
   
+  ngAfterViewInit(): void {
+    // Se precisar notificar o estado inicial, faça APÓS o 1º ciclo
+    queueMicrotask(() => {
+      // só emite se realmente precisar sincronizar o estado inicial com o pai
+      // this.allChipsChange.emit([...this.allChips]);
+    });
+  }
+
+  // Se o Input mudar pela primeira vez (binding inicial), não reemita nesse ciclo
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['allChips']?.firstChange) {
+      return; // evita alteração durante o primeiro check
+    }
+  }
+  
   //controlvalueAcessor impl
   private onChange = (value: any) => {};
   private onTouched = () => {};
@@ -56,9 +80,9 @@ export class MatChipsComponent implements ControlValueAccessor, OnInit {
     const normalized = this.normalizeIncoming(value);
     this.chips = normalized;
     // atualiza o parent ([(allChips)]) com o valor inicial, se necessário
-    this.allChipsChange.emit(this.chips);
+    //this.allChipsChange.emit(this.chips);
     // notifica o form (garante sincronização)
-    this.onChange(this.chips);
+    //this.onChange(this.chips);
   }
 
   registerOnChange(fn: any): void { this.onChange = fn; }
@@ -69,15 +93,56 @@ export class MatChipsComponent implements ControlValueAccessor, OnInit {
     else this.chipCtrl.enable({ emitEvent: false });
   }
 
-  addChip(event: MatChipInputEvent): void {
-    const value = (event.value || '' ).trim();
-    if(value && !this.chips.includes(value)) {
-      this.chips.push(value);
-      this._update();
+  /*
+  addChip(tag: string) {
+    const value = (tag || '').trim();
+    if (!value || this.chips.includes(value)) return;
+
+    this.chips = [...this.chips, value];
+    this._update(); // notifica form e [(allChips)] corretamente
+
+    // opcional: incluir nas sugestões, se fizer sentido
+    if (!this.allChips.includes(value)) {
+      this.allChips = [...this.allChips, value];
+      this.allChipsChange.emit(this.allChips);
     }
-    event.chipInput!.clear();
-    this.chipCtrl.setValue(null);
   }
+  */
+
+  addChip(ev: string | MatChipInputEvent): void {
+    // 1) extrai o valor digitado
+    const raw = typeof ev === 'string' ? ev : ev?.value;
+    const value = (raw ?? '').toString().trim();
+
+    // 2) se vazio/duplicado, apenas limpa input e sai
+    if (!value || this.chips.includes(value)) {
+      // limpar o input visual (quando veio evento)
+      if (typeof ev !== 'string') {
+        // alguns temas têm .chipInput.clear(), use safe-call
+        (ev as MatChipInputEvent).chipInput?.clear?.();
+      }
+      // zera o FormControl sem emitir loop
+      this.chipCtrl.setValue('', { emitEvent: false });
+      return;
+    }
+
+    // 3) adiciona a tag e notifica corretamente (view -> model)
+    this.chips = [...this.chips, value];
+    this._update();
+
+    // 4) (opcional) inclui nas sugestões
+    if (!this.allChips.includes(value)) {
+      this.allChips = [...this.allChips, value];
+      this.allChipsChange.emit(this.allChips);
+    }
+
+    // 5) limpa o input
+    if (typeof ev !== 'string') {
+      (ev as MatChipInputEvent).chipInput?.clear?.();
+    }
+    this.chipCtrl.setValue('', { emitEvent: false });
+  }
+
   removeTag(tag: string): void {
     const index = this.chips.indexOf(tag);
     if ( index >= 0 ) {

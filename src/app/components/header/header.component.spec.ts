@@ -41,7 +41,6 @@ describe('HeaderComponent', () => {
     const mockLinks: ILinkRequest = 
       { id: 1, 
         name: 'Link 1', 
-        url: 'http://a.com',
         uri: {}, 
         categoria: 'A', 
         descricao: 'desc',
@@ -54,6 +53,8 @@ describe('HeaderComponent', () => {
         dataSaidaTarde: '',
         dataEntradaNoite: '',
         dataSaidaNoite: '',
+        horas: null
+        
       };
     //mockHomeService.getLinks.and.returnValue(of(mockLinks));
     fixture.detectChanges(); // chama ngOnInit()

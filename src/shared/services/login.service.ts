@@ -15,7 +15,6 @@ export class LoginService {
     return this.http.post<{ token: string }>(this.url, { username, password })
       .pipe(
         tap((response: any) => {
-          console.log(response);
           localStorage.setItem('token', response.token); // salva token no navegador
         })
       );

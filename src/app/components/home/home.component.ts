@@ -123,7 +123,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
                         ).subscribe({
       next: (response: any) => {
         let lnk = response.atividades;
-        lnk.sort((a: any, b: any) => a.name.localeCompare(b?.name));
+        lnk.sort((a: any, b: any) => a.name?.localeCompare(b?.name));
         if ( lnk[0].categoria.toLowerCase() === 'timesheet' ) {
           this.totalHoras = this.homeService.totalHorasTimeSheet(lnk);
           this.links = lnk;
@@ -153,6 +153,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         categoria: obj.categoria,
         descricao: obj.descricao,
         tag: [obj.tag],
+        fileID: [obj.fileID],
         subCategoria: obj.subCategoria,
         showSite: showSite,
         dataEntradaManha: obj.dataEntradaManha,

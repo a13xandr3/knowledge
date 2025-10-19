@@ -3,27 +3,20 @@ import { BehaviorSubject } from "rxjs";
 import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-
 export class LinkStateService {
+  /**
+   * Fluxo de atualizações de links.
+   * Os componentes podem se inscrever para reagir a mudanças.
+   */
+  private readonly _refreshLink$ = new BehaviorSubject<boolean>(false);
 
-  static triggerRefresh(triggerRefresh: any) {
-      throw new Error('Method not implemented.');
-    }
+  /** Observable somente leitura para notificações de atualização. */
+  readonly refreshLink$ = this._refreshLink$.asObservable();
 
-    private _refreshLink$ = new BehaviorSubject<boolean>(false);
-
-    ///private refreshSubject = new Subject<void>();
-
-    refreshLink$ = this._refreshLink$.asObservable();
-    
-    ///refresh$ = this.refreshSubject.asObservable();
-
-    triggerRefresh() {
-
-        this._refreshLink$.next(true);
-
-        ///this.refreshSubject.next();
-
-    }
-
+  /**
+   * Dispara um evento de refresh para que assinantes saibam que devem recarregar os dados.
+   */
+  triggerRefresh(): void {
+    this._refreshLink$.next(true);
+  }
 }

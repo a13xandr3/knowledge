@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -14,17 +15,18 @@ import { DialogContentComponent } from './components/dialog-content/dialog-conte
 
 import { MatDialogModule } from '@angular/material/dialog';
 
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
 
 import { QuillModule } from 'ngx-quill';
 
@@ -36,6 +38,9 @@ import { QuillComponent } from '../shared/components/quill/quill.component';
 import { DurationPipe } from '../shared/pipe/duration.pipe';
 import { HoraFormatadaPipe } from '../shared/pipe/hora-formatada.pipe';
 
+import { ShowFileComponent } from '../shared/components/show-file/show-file.component';
+import { InputFileComponent } from '../shared/components/input-file/input-file.component';
+import { UploaderComponent } from '../shared/components/uploader/uploader.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,9 +51,13 @@ import { HoraFormatadaPipe } from '../shared/pipe/hora-formatada.pipe';
     MatChipsComponent,
     QuillComponent,
     DurationPipe,
-    HoraFormatadaPipe
+    HoraFormatadaPipe,
+    ShowFileComponent,
+    InputFileComponent,
+    UploaderComponent
   ],
   imports: [
+    CommonModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
@@ -62,6 +71,7 @@ import { HoraFormatadaPipe } from '../shared/pipe/hora-formatada.pipe';
     MatIconModule,
     MatInputModule,
     MatPaginatorModule,
+    MatProgressBarModule,
     MatRadioModule,
     MatSelectModule,
     MatSnackBarModule,
@@ -76,7 +86,7 @@ import { HoraFormatadaPipe } from '../shared/pipe/hora-formatada.pipe';
     }),
     ReactiveFormsModule,
   ],
-  exports: [],
+  exports: [MatChipsComponent],
   providers: [
     provideNgxMask(),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

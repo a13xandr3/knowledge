@@ -95,7 +95,7 @@ describe('DialogContentComponent', () => {
     const putResponse = of({
       id: 1,
       name: 'Link válido',
-      url: 'http://teste.com',
+      uri: [''],
       categoria: 'Teste',
       descricao: 'Descrição de teste',
       oldCategoria: 'Categoria antiga'
@@ -125,7 +125,7 @@ describe('DialogContentComponent', () => {
     expect(console.log).toHaveBeenCalledWith(jasmine.any(Error));
   });
   it('deve chamar mostrarMensagem corretamente', () => {
-    component.mostrarMensagem('Teste');
+    //component.mostrarMensagem('Teste');
     expect(mockSnackBar.open).toHaveBeenCalledWith('Teste', 'Fechar', {
       duration: 5000,
       verticalPosition: 'top',

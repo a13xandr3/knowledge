@@ -78,6 +78,7 @@ export class HomeService {
       subCategoria: request.subCategoria,
       descricao: request.descricao,
       tag: request.tag,
+      fileID: request.fileID,
       dataEntradaManha: request.dataEntradaManha,
       dataSaidaManha: request.dataSaidaManha,
       dataEntradaTarde: request.dataEntradaTarde,
@@ -92,7 +93,21 @@ export class HomeService {
     });
   }
   putLink(request: ILinkRequest): Observable<ILinksResponse> {
-    const token = localStorage.getItem('token');
+    const auxRequest = {
+      name: request.name,
+      uri: request.uri,
+      categoria: request.categoria,
+      subCategoria: request.subCategoria,
+      descricao: request.descricao,
+      tag: request.tag,
+      fileID: request.fileID,
+      dataEntradaManha: request.dataEntradaManha,
+      dataSaidaManha: request.dataSaidaManha,
+      dataEntradaTarde: request.dataEntradaTarde,
+      dataSaidaTarde: request.dataSaidaTarde,
+      dataEntradaNoite: request.dataEntradaNoite,
+      dataSaidaNoite: request.dataSaidaNoite
+    }
     return this.http.put<ILinksResponse>(`${this.url}/${request.id}`, request, {
       headers: new HttpHeaders({
         'content-type': 'application/json',

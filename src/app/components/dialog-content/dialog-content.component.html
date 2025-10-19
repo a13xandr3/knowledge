@@ -154,9 +154,25 @@
             </mat-form-field>
           </div>
         </div>
+
+        <!-- File -->
+        <div class="row">
+          <div class="col-12 w-100">
+            <app-uploader #uploader
+              (processed)="onProcessed($event)"
+              (error)="onError($event)"
+              (cleared)="onClearedFiles()"
+              (removedAt)="onPreviewRemoved($event)"
+              [allowMultiple]="true"
+              [previews]="previewsFromIds"
+              >
+            </app-uploader>
+          </div>
+        </div>
+
         <!-- Descricao -->
         <div class="row">
-          <div class="col-12 w-100" >
+          <div class="col-12 w-100 mt-4" >
               <app-quill formControlName="descricao"></app-quill>
           </div>
         </div>

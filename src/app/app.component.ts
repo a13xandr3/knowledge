@@ -18,11 +18,9 @@ export class AppComponent {
   login(): void {
     this.loginService.login('alexandre','1234').subscribe({
       next: (response: any) => {
-        console.log('token', response.token);
         //this.router.navigate(['/dashboard']);
       },
       error: (err: any) => {
-        console.log(err);
       }
     });
   }

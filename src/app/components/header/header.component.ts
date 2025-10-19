@@ -5,14 +5,9 @@ import { DialogContentComponent } from '../dialog-content/dialog-content.compone
 import { HomeService } from '../../../shared/services/home.service';
 import { LinkStateService } from '../../../shared/state/link-state-service';
 import { HttpErrorResponse } from '@angular/common/http';
-export interface ICategoria {
-  id: number;
-  categoria: string;
-}
-export interface ITag {
-  id: number;
-  tag: any;
-}
+import { ICategoria } from 'src/shared/request/request';
+
+// Type guard para verificar se um objeto tem a estrutura esperada de tags
 function isTagObject(v: any): v is { tags: unknown } {
   return v && typeof v === 'object' && Array.isArray((v as any).tags);
 }
@@ -94,7 +89,6 @@ export class HeaderComponent implements OnInit {
         dataSaidaTarde: this.ISODate(this.brDate()),
         dataEntradaNoite: this.ISODate(this.brDate()),
         dataSaidaNoite: this.ISODate(this.brDate()),
-
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -131,7 +125,7 @@ export class HeaderComponent implements OnInit {
     this.homeService.getCategorias().subscribe({
       next: (response: any) => {
         const resp = response;
-        this.links = [...new Set(response.map((r: ICategoria) => r.categoria))] as string[];        
+        this.links = [...new Set(resp?.map((r: ICategoria) => r.categoria))] as string[];        
         this.links.sort((a: any, b: any) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
         this.links.unshift('todos');
       },

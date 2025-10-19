@@ -42,6 +42,7 @@
               "node_modules/quill/dist/quill.core.css",
               "node_modules/quill/dist/quill.snow.css",
               "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/font-awesome/css/font-awesome.min.css",
               "@angular/material/prebuilt-themes/indigo-pink.css"
             ],
             "scripts": [
@@ -53,7 +54,14 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": {
+                "scripts": true,
+                "styles": true,
+                "vendor": true
+              },
+              "buildOptimizer": false,
+              "vendorChunk": true,
+              "aot": true
             },
             "production": {
               "fileReplacements": [
@@ -64,7 +72,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -91,6 +99,7 @@
           },
           "configurations": {
             "development": {
+              "browserTarget": "links:build:development"
             },
             "production": {
               "browserTarget": "links:build:production"

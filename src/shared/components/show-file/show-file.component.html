@@ -1,0 +1,29 @@
+<div *ngIf="loading">Carregando…</div>
+
+<ng-container *ngIf="!loading && originalFile">
+  <h3>{{ originalFile.name }}</h3>
+  <p><strong>MIME:</strong> {{ originalFile.type || 'desconhecido' }}</p>
+  <div class="actions">
+    <button (click)="download()">Baixar</button>
+  </div>
+
+  <!-- Renderização simples por tipo -->
+  <ng-container [ngSwitch]="renderKind">
+    <div *ngSwitchCase="'image'">
+      <img [src]="objectUrl" alt="preview" style="max-width:100%;height:auto;">
+    </div>
+
+    <div *ngSwitchCase="'text'">
+      <pre style="white-space:pre-wrap; max-height:60vh; overflow:auto">{{ previewText }}</pre>
+    </div>
+
+    <div *ngSwitchCase="'pdf'">
+      <iframe [src]="objectUrl" style="width:100%; height:70vh;" frameborder="0"></iframe>
+    </div>
+
+    <div *ngSwitchDefault>
+      <p>Pré-visualização indisponível para este tipo. Use o botão “Baixar”.</p>
+    </div>
+  </ng-container>
+</ng-container>
+

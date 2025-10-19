@@ -9,6 +9,11 @@
     font-weight: var(--mdc-dialog-subhead-weight, 500);
     letter-spacing: var(--mdc-dialog-subhead-tracking, 1px);
 }
+::ng-deep .mat-mdc-text-field-wrapper {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.02) !important;
+}
+
 .knowledge-base {
   font-size: 1rem !important;
   font-weight: 700;
@@ -18,19 +23,6 @@
     2px 2px 3px #1C4A48,           /* drop shadow smooth escura */
     -1px -1px 1px rgba(255,255,255,0.4); /* leve brilho para alto relevo */
     letter-spacing: 0.5rem;
-}
-::ng-deep .ql-editor {
-    box-sizing: border-box;
-    line-height: 1.42;
-    height: 31vh !important;
-    outline: none;
-    overflow-y: auto;
-    padding: 12px 15px;
-    tab-size: 4;
-    -moz-tab-size: 4;
-    text-align: left;
-    white-space: pre-wrap;
-    word-wrap: break-word;
 }
 .linha {
     height: 14vh !important;

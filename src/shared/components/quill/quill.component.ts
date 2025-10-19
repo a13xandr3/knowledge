@@ -50,7 +50,6 @@ export class QuillComponent implements ControlValueAccessor, OnDestroy {
         const delta = this.quill?.clipboard.convert(this._value) as any;
         this.quill?.setContents(delta, 'silent');
       } catch (err) {
-        console.log('Erro ao converter HTML -> Delta', err);
       }
     };
     // Se o modal tiver animação / o editor pode estar invisível, espere um pouco.

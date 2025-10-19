@@ -5,11 +5,12 @@ export interface ILinks {
 export interface ILinksResponse {
     id: number;
     name: string;
-    uri: unknown;
+    uri: any;
     categoria: string;
     subCategoria?: string;
     descricao: string;
-    tag: unknown;
+    tag: any;
+    fileID?: any;
     dataEntradaManha?: string | null;
     dataSaidaManha?: string | null;
     dataEntradaTarde?: string | null;

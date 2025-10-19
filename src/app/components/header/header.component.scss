@@ -1,4 +1,4 @@
-.header-container {
+  .header-container {
     background-color: #f5f5f5;
     border-bottom: 1px solid #ccc;
     //box-sizing: border-box;
@@ -22,21 +22,31 @@
     background-color: #0056b3;
   }
  
-.knowledge-base {
-  font-size: 2rem !important;
-  font-weight: 700;
-  color: #212626 !important;
-  text-shadow:
-    0 0 1px #14302e,               /* outline turquesa fino */
-    2px 2px 3px #1C4A48,           /* drop shadow smooth escura */
-    -1px -1px 1px rgba(255,255,255,0.4); /* leve brilho para alto relevo */
-    letter-spacing: 0.5rem;
-}
+  .knowledge-base {
+    /* fallback (caso clamp não seja suportado) */
+    font-size: 2rem;
+    /* tipografia fluida: min 1.25rem, cresce com viewport, máx 2.75rem */
+    font-size: clamp(1.0rem, 1rem + 2vw, 2.25rem) !important;
 
-::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
-    background-color: #fff !important;
-    border-top: 1px solid !important;
-    border-left: 1px solid !important;
-    border-right: 1px solid !important;
-    border-radius: 5px !important;
-}
+    font-weight: 700;
+    color: #212626 !important;
+
+    text-shadow:
+      0 0 1px #14302e,
+      2px 2px 3px #1C4A48,
+      -1px -1px 1px rgba(255, 255, 255, 0.4);
+
+    /* espaçamento entre letras também responsivo:
+      min 0.08rem, cresce um pouco, máx 0.5rem */
+    letter-spacing: clamp(0.08rem, 0.1rem + 0.8vw, 0.5rem);
+
+    line-height: clamp(1.2rem, 1.2rem + 1vw, 2.5rem)  ;
+  }
+
+  ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+      background-color: #fff !important;
+      border-top: 1px solid !important;
+      border-left: 1px solid !important;
+      border-right: 1px solid !important;
+      border-radius: 5px !important;
+  }
