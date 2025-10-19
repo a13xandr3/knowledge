@@ -10,7 +10,7 @@
   <!-- Renderização simples por tipo -->
   <ng-container [ngSwitch]="renderKind">
     <div *ngSwitchCase="'image'">
-      <img [src]="objectUrl" alt="preview" style="max-width:100%;height:auto;">
+      <img loading="lazy"  [src]="objectUrl" alt="preview" style="max-width:100%;height:auto;">
     </div>
 
     <div *ngSwitchCase="'text'">

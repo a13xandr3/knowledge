@@ -39,14 +39,14 @@
                   [class.disabled]="!injectUrl(link)"
                   target="_blank" 
                   rel="noopener noreferrer">
-                    <img 
+                    <img loading="lazy"  
                       src="../../public/icos/search.svg" 
                       alt="Abre url externamente" >
                 </a>
             </span>
             <span 
               class="actions">
-              <img 
+              <img loading="lazy"  
                 src="../../public/icos/edit.svg" 
                 (click)="abrirDialog(link, false)" 
                 alt="Edit" 
@@ -54,7 +54,7 @@
             </span>
             <span 
               class="actions">
-              <img 
+              <img loading="lazy"  
                 src="../../public/icos/delete.svg" 
                 (click)="delete(link.id)"
                 class="delete"

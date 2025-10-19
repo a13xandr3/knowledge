@@ -26,7 +26,7 @@
     <!-- Seleciona automaticamente a visualização de imagem ou arquivo genérico -->
     <ng-container *ngIf="isImage(p); else nonImageBlock">
       <!-- Para imagens renderizamos a thumbnail usando o object URL -->
-      <img 
+      <img loading="lazy"  
         class="thumb img-vivid-sharp"
         title="thumb"
         [src]="p.url"
