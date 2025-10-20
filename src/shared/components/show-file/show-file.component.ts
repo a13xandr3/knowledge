@@ -49,6 +49,7 @@ export class ShowFileComponent implements OnInit, OnDestroy {
       if (!snap) {
         console.warn('[ShowFile] Snapshot não informado no MAT_DIALOG_DATA.');
         this.renderKind = 'other';
+        this.loading = false;
         return;
       }
       // Restaura arquivo original
@@ -56,29 +57,26 @@ export class ShowFileComponent implements OnInit, OnDestroy {
       this.originalFile = originalFile;
       // Decide renderização
       const mt = (originalFile.type || '').toLowerCase();
+      const name = this.originalFile.name.toLowerCase();
       if (mt.startsWith('image/')) {
         this.renderKind = 'image';
         this.objectUrl = URL.createObjectURL(originalFile);
-      } else if (mt.startsWith('text/') || mt.endsWith('.csv') || mt.endsWith('.json')) {
+      } else if (mt.startsWith('text/') || name.endsWith('.csv') || name.endsWith('.json')) {
         this.renderKind = 'text';
         const ab = await originalFile.arrayBuffer();
         this.previewText = new TextDecoder('utf-8').decode(ab).slice(0, 50_000);
-      } else if (mt === 'application/pdf' || originalFile.name.toLowerCase().endsWith('.pdf')) {
+      } else if (mt === 'application/pdf' || name.endsWith('.pdf')) {
         this.renderKind = 'pdf';
         this.objectUrl = URL.createObjectURL(originalFile);
         this.safeObjectUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.objectUrl);
-      } else if (mt === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || originalFile.name.toLowerCase().endsWith('.xlsx')) {
+      } else if (mt === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || name.endsWith('.xlsx')) {
         const ab = await originalFile.arrayBuffer();
         await this.renderXlsx(ab);        // <<-- novo
         this.renderKind = 'xlsx';
-      } else if (
-        mt === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-        originalFile.name.toLowerCase().endsWith('.docx')
-      ) {
+      } else if (mt === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || name.endsWith('.docx')) {
         this.renderKind = 'docx';
-        this.loading = false; 
         const ab = await originalFile.arrayBuffer();
-        // garante que o host #docxHost já existe no DOM
+        this.loading = false;
         await this.nextTick();
         await this.ensureDocxHostReady();
         try {
@@ -87,6 +85,7 @@ export class ShowFileComponent implements OnInit, OnDestroy {
           console.warn('[ShowFile] docx-preview falhou, fallback mammoth:', e);
           await this.renderDocxWithMammoth(ab);    // fallback para HTML
         }
+        return;
       } else {
         this.renderKind = 'other';
       }
@@ -95,6 +94,7 @@ export class ShowFileComponent implements OnInit, OnDestroy {
       this.renderKind = 'other';
     } finally {
     }
+    this.loading = false; 
     return;
   }
   private async nextTick(): Promise<void> {
@@ -128,34 +128,13 @@ export class ShowFileComponent implements OnInit, OnDestroy {
     // Sanitiza para binding seguro
     this.xlsxHtml = this.sanitizer.bypassSecurityTrustHtml(html);
   }
-  /** Renderiza DOCX em HTML; escolha UMA das abordagens abaixo */
-  // (A) Melhor fidelidade: docx-preview
-  private async renderDocx(ab: ArrayBuffer): Promise<void> {
-    const { default: Docx } = await import('docx-preview'); // tipagem default
-    // docx-preview normalmente injeta em um container; aqui convertemos para string
-    // via renderToHtml. Se sua versão não expõe utilitário HTML, use mammoth (abaixo).
-    // @ts-ignore (algumas versões expõem renderAsync para container; alternativa B abaixo)
-    const html = await (Docx as any).renderToHtml?.(ab) ?? '';
-    if (html) {
-      this.docxHtml = this.sanitizer.bypassSecurityTrustHtml(html);
-      return;
-    }
-    // fallback para (B) mammoth se a API acima não existir:
-    await this.renderDocxWithMammoth(ab);
-  }
-  /** Aguarda um tick para o Angular materializar o #docxHost no DOM */
   private async ensureDocxHostReady(): Promise<void> {
-    // força um ciclo de change detection
-    this.cdr.detectChanges?.();
-    // aguarda microtask: garante que o template do ngSwitchCase foi aplicado
-    await Promise.resolve();
-    // opcional: um pequeno timeout em edge-cases
-    if (!this.docxHost?.nativeElement) {
+    for (let i = 0; i < 5; i++) {
+      this.cdr.detectChanges();
       await new Promise(r => setTimeout(r, 0));
+      if (this.docxHost?.nativeElement) return;
     }
-    if (!this.docxHost?.nativeElement) {
-      throw new Error('docxHost não disponível no template.');
-    }
+    throw new Error('docxHost não disponível no template.');
   }
   /** Renderiza DOCX diretamente no container via docx-preview */
   private async renderDocxIntoHost(ab: ArrayBuffer): Promise<void> {
