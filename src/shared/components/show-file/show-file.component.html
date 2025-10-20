@@ -8,7 +8,7 @@
       <div class="meta">
         <span class="chip">ID: {{ itemId || '—' }}</span>
         <!--span class="chip">MIME: {{ (originalFile?.type || 'desconhecido') }}</span-->
-        <span class="chip" *ngIf="originalFile">Tamanho: {{ prettySize * 1024 }}</span>
+        <span class="chip" *ngIf="originalFile">Tamanho: {{ prettySize }}</span>
       </div>
     </div>
     <button class="icon-btn close" (click)="close()" aria-label="Fechar">×</button>
