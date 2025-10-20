@@ -10,7 +10,6 @@ describe('HomeService', () => {
   const mockLinkRequest: ILinkRequest = {
     id: 1,
     name: 'Teste',
-    url: 'http://teste.com',
     uri: {},
     categoria: 'Categoria A',
     descricao: 'Descrição do link',
@@ -23,6 +22,7 @@ describe('HomeService', () => {
     dataSaidaTarde: '',
     dataEntradaNoite: '',
     dataSaidaNoite: '',
+    horas: ''
   };
 
   const apiUrl = 'http://localhost:8081/api/link';

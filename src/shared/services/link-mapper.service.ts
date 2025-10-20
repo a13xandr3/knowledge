@@ -98,28 +98,6 @@ export class LinkMapperService {
     };
     return payload;
   }
-  /*
-  buildRequest(request: any, tags: string[], uris: string[], files: string[]): any {
-    const isTimesheet = request.categoria?.toLowerCase() === 'timesheet';
-    const toISO = (dt: any) => isTimesheet ? this.ISODate(dt?.replace(',', '')) : null;
-    return {
-      id: request.id,
-      name: request.name,
-      uri: { uris },
-      categoria: request.categoria ? this.toTitleCase(request.categoria) : '',
-      subCategoria: request.subCategoria ? this.toTitleCase(request.subCategoria) : '',
-      descricao: request.descricao,
-      tag: { tags },
-      fileID: { files },
-      dataEntradaManha: toISO(request?.dataEntradaManha),
-      dataSaidaManha: toISO(request?.dataSaidaManha),
-      dataEntradaTarde: toISO(request?.dataEntradaTarde),
-      dataSaidaTarde: toISO(request?.dataSaidaTarde),
-      dataEntradaNoite: toISO(request?.dataEntradaNoite),
-      dataSaidaNoite: toISO(request?.dataSaidaNoite)
-    };
-  }
-  */
   /**
    * Cria um observable que emite o tempo restante em segundos até chegar a zero.
    * 

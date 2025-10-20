@@ -119,11 +119,4 @@ export class UploaderComponent {
     // Ex.: GET /api/files/:id/download (ver item 4)
     window.open(`/api/files/${id}/download`, '_blank');
   }
-  async preview_(id: string) {
-    // Ex.: GET /api/files/:id (retorna um snapshot ProcessedSnapshot)
-    const snap = await this.http.get<ProcessedSnapshot>(`/api/files/${id}`).toPromise();
-    // guarde em um serviço/rota para o show-file (ver item 5)
-    sessionStorage.setItem('lastSnapshot', JSON.stringify(snap));
-    window.open('/show-file', '_blank'); // rota que exibe o arquivo
-  }
 }

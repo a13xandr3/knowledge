@@ -169,11 +169,15 @@ export class InputFileComponent implements OnInit, OnDestroy {
       return;
     }
     try {
-      const snap = await firstValueFrom(this.filesSvc.getSnapshot(idNum, true));
+      const snapshot = await firstValueFrom(this.filesSvc.getSnapshot(idNum, true));
       this.dialog.open(ShowFileComponent, {
-          width: '80vw',
-          maxHeight: '80vh',
-          data: { snapshot: snap },
+          width: '90vw',
+          maxWidth: '98vw',
+          height: '90vh',
+          data: { 
+            snapshot,
+            itemId: idNum 
+          },
           autoFocus: false
         });
     } catch (err) {

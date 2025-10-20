@@ -25,6 +25,8 @@
             "aot": true,
             "sourceMap": true,
             "allowedCommonJsDependencies": [
+              "jszip",
+              "mammoth/mammoth.browser",
               "quill",
               "quill-mention"
             ],
@@ -64,6 +66,10 @@
               "aot": true
             },
             "production": {
+              "allowedCommonJsDependencies": [
+                "jszip",
+                "mammoth/mammoth.browser"
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

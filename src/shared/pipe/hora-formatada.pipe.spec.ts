@@ -1,4 +1,4 @@
-import { HoraFormatadaPipe } from '../../app/hora-formatada.pipe';
+import { HoraFormatadaPipe } from './hora-formatada.pipe';
 
 describe('HoraFormatadaPipe', () => {
   it('create an instance', () => {

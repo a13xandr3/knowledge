@@ -7,7 +7,7 @@ import Quill from 'quill';
 
 // --- registrar FontAttributor (classes ql-font-*)
 const FontAttributor = Quill.import('attributors/class/font');
-FontAttributor.whitelist = ['Alumni', 'Poppins', 'Raleway']; // ⟵ sua whitelist
+FontAttributor.whitelist = ['Alumni', 'Poppins', 'Raleway'];
 Quill.register(FontAttributor, true);
 
 // --- registrar SizeAttributor (style size - exemplo: '72px')
