@@ -38,6 +38,7 @@ import { HoraFormatadaPipe } from '../shared/pipe/hora-formatada.pipe';
 import { ShowFileComponent } from '../shared/components/show-file/show-file.component';
 import { InputFileComponent } from '../shared/components/input-file/input-file.component';
 import { UploaderComponent } from '../shared/components/uploader/uploader.component';
+import { SelectFieldComponent } from 'src/shared/components/select-field/select-field.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +52,8 @@ import { UploaderComponent } from '../shared/components/uploader/uploader.compon
     HoraFormatadaPipe,
     ShowFileComponent,
     InputFileComponent,
-    UploaderComponent
+    UploaderComponent,
+    SelectFieldComponent
   ],
   imports: [
     CommonModule,
