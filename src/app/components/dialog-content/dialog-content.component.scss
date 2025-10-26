@@ -1,33 +1,54 @@
-.mat-mdc-dialog-content {
-    max-height: 100vh !important;
-    height: 100vh !important;
-}
-.mat-mdc-dialog-container .mdc-dialog__title {
-    font-family: var(--mdc-dialog-subhead-font);
-    line-height: var(--mdc-dialog-subhead-line-height, 14px);
-    font-size: var(--mdc-dialog-subhead-size, 14px);
-    font-weight: var(--mdc-dialog-subhead-weight, 500);
-    letter-spacing: var(--mdc-dialog-subhead-tracking, 1px);
-}
-::ng-deep .mat-mdc-text-field-wrapper {
-    width: 100%;
-    background: rgba(0, 0, 0, 0.02) !important;
+::ng-deep .main {
+    .mat-mdc-dialog-content {
+        max-height: 100vh !important;
+        height: 100vh !important;
+        .body {
+            .form-layout {
+                .row {
+                    .linha {
+                        .knowledge-base {
+                          font-size: 1rem !important;
+                          font-weight: 700;
+                          color: #212626 !important;
+                          text-shadow: 0 0 1px #14302e, 2px 2px 3px #1C4A48, -1px -1px 1px rgba(255,255,255,0.4);
+                          letter-spacing: 0.5rem;
+                          padding: 1rem 0 1rem 0;
+                        }
+                    }
+                }
+                .row {
+                    div {
+
+                    }
+                }
+
+            }
+        }
+    }
+
 }
 
-.knowledge-base {
-  font-size: 1rem !important;
-  font-weight: 700;
-  color: #212626 !important;
-  text-shadow:
-    0 0 1px #14302e,               /* outline turquesa fino */
-    2px 2px 3px #1C4A48,           /* drop shadow smooth escura */
-    -1px -1px 1px rgba(255,255,255,0.4); /* leve brilho para alto relevo */
-    letter-spacing: 0.5rem;
+/*
+.mat-mdc-form-field-infix {
+    flex: auto;
+    min-width: 0;
+    width: 180px;
+    position: relative;
+    box-sizing: border-box;
+}
+
+
+
+
+
+ .mat-mdc-text-field-wrapper {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.02) !important;
 }
 .linha {
     height: 14vh !important;
 }
-::ng-deep .mdc-dialog__title {
+ .mdc-dialog__title {
     display: block;
     margin-top: 0;
     position: relative;
@@ -36,10 +57,11 @@
     margin: 0 0 1px;
     padding: 0 !important;
 }
-::ng-deep .mat-h2, 
-::ng-deep .mat-headline-6, 
-::ng-deep .mat-typography .mat-h2, 
-::ng-deep .mat-typography .mat-headline-6, 
-::ng-deep .mat-typography h2 {
+ .mat-h2, 
+ .mat-headline-6, 
+ .mat-typography .mat-h2, 
+ .mat-typography .mat-headline-6, 
+ .mat-typography h2 {
     margin: 0 !important;
 }
+    */
