@@ -1,6 +1,6 @@
 .body {
-    height: 75vh;
-    max-height: 75vh;
+    height: 82vh;
+    max-height: 82vh;
 }
 .row {
     border-bottom: 1px solid #c1bccd;
@@ -15,18 +15,18 @@
            .mat-mdc-footer-row, 
            .mat-mdc-table .mat-mdc-header-cell {
     background: inherit;
-    height: 6vh;
-    max-height: 6vh;
+    height: 7vh;
+    max-height: 7vh;
 }
 ::ng-deep .mat-mdc-table .mdc-data-table__row {
     height: 1.5rem;
 }
 ::ng-deep td:nth-child(4) {
-    display: list-item !important;
-    height: 6vh !important;
+    display: table-cell !important;
+    height: 7vh !important;
     overflow-y: auto !important;
     margin-top: 0 !important;
-    padding: 0 !important;
+    padding: 3px !important;
 }
 ::ng-deep .mat-mdc-chip-set .mdc-evolution-chip-set__chips {
     min-width: 100%;

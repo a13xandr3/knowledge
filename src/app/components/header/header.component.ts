@@ -6,6 +6,7 @@ import { HomeService } from '../../../shared/services/home.service';
 import { LinkStateService } from '../../../shared/state/link-state-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ICategoria } from 'src/shared/request/request';
+import { SelectOption } from 'src/shared/models/select-option.model';
 
 // Type guard para verificar se um objeto tem a estrutura esperada de tags
 function isTagObject(v: any): v is { tags: unknown } {
@@ -17,13 +18,22 @@ function isTagObject(v: any): v is { tags: unknown } {
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  matcher = undefined; // ou um ErrorStateMatcher, se quiser
   @Output() itemSelecionadoEvent = new EventEmitter<string>();
   @Input() titulo!: string;
   @Input() totalHoras!: any;
+
   links: string[] = [];
   tg: string[] = [];
+  statusOptionsCat: SelectOption<string>[] = [];
+  statusOptionsTag: SelectOption<string>[] = [];
+
   selectedItemCategory: string = '';
   selectedItemTag: string = '';
+  
+  // valor inicial opcional
+  initialValue: string | null = '';
+
   constructor(
     private homeService: HomeService,
     private linkStateService: LinkStateService,
@@ -49,6 +59,9 @@ export class HeaderComponent implements OnInit {
     let tagValue = `${value}_tag`;
       this.selectedItemTag = value;
       this.itemSelecionadoEvent.emit(tagValue);
+  }
+  onStatusChange(opt: SelectOption<string> | null): void {
+    //console.log('Selecionado:', opt); // aqui você recebe o item inteiro
   }
   ISODate(dt: any): any {
     if ( dt === null || dt === '' ) return null;
@@ -113,6 +126,10 @@ export class HeaderComponent implements OnInit {
         this.tg = [...new Set(allTags)] as string[];        
         this.tg.sort((a: any, b: any) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
         this.tg.unshift('todos');
+        this.statusOptionsTag = (this.tg ?? []).map(cat => ({
+          value: cat,
+          label: cat
+        }));
       },
       error: (err: HttpErrorResponse) => {
         this.snackService.mostrarMensagem(
@@ -128,6 +145,10 @@ export class HeaderComponent implements OnInit {
         this.links = [...new Set(resp?.map((r: ICategoria) => r.categoria))] as string[];        
         this.links.sort((a: any, b: any) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
         this.links.unshift('todos');
+        this.statusOptionsCat = (this.links ?? []).map(cat => ({
+          value: cat,
+          label: cat
+        }));
       },
       error: (err: HttpErrorResponse) => {
         this.snackService.mostrarMensagem(

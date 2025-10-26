@@ -6,35 +6,36 @@
       </div>
       <div class="col-4 d-flex justify-content-center align-items-center">
         <!--Dropdown Categoria-->
-        <mat-form-field appearance="fill">
-          <mat-label>Selecione uma categoria</mat-label>
-          <mat-select [(ngModel)]="selectedItemCategory" (selectionChange)="onChangeCategory($event.value)">
-            <mat-option *ngFor="let name of links" [value]="name">{{ name }}</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <app-select-field
+          [options]="statusOptionsCat"
+          [placeholder]="'Choose one'"
+          [matcher]="matcher"
+          [value]="initialValue"
+          (valueChange)="onChangeCategory($event.value)"
+          >
+        </app-select-field>
       </div>
       <div class="col-3 d-flex justify-content-center align-items-center">
         <!--Tag-->
-        <mat-form-field appearance="fill">
-          <mat-label>Selecione uma Tag</mat-label>
-          <mat-select [(ngModel)]="selectedItemTag" (selectionChange)="onChangeTag($event.value)">
-            <mat-option *ngFor="let t of tg" [value]="t">{{ t }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <!--(optionSelected)="selected($event)"-->
+        <app-select-field
+          [options]="statusOptionsTag"
+          [placeholder]="'Choose one'"
+          [matcher]="matcher"
+          [value]="initialValue"
+          (valueChange)="onChangeTag($event.value)"
+          >
+        </app-select-field>
       </div>
       <div class="col-1 d-flex justify-content-center align-items-center">
         <!--button Incluir-->
         <button class="incluir-btn" (click)="abrirDialog()">Incluir</button>
       </div>
     </div>
-
     <div class="row" *ngIf="this.selectedItemCategory.toLowerCase() === 'timesheet' ">
       <div class="col-12">
         <span>Total Horas: </span>
         <span>{{ totalHoras | horaFormatada }}</span>
       </div>
     </div>
-
   </div>
 </header>
