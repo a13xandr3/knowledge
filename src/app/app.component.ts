@@ -1,5 +1,6 @@
 import { LoginService } from 'src/shared/services/login.service';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,20 +10,27 @@ import { Component } from '@angular/core';
 export class AppComponent {
   public title = 'Knowledge Base';
 
-  constructor(private loginService: LoginService) {}
+  constructor(
+    private router: Router,
+    private loginService: LoginService) {}
 
   ngOnInit() {
-    this.login();
+    //this.login();
   }
 
+  /*
   login(): void {
+    //'alexandre','1234'
     this.loginService.login('alexandre','1234').subscribe({
       next: (response: any) => {
-        //this.router.navigate(['/dashboard']);
+        this.router.navigate(['/home'], {
+          queryParams: { titulo: this.title }
+        });
       },
       error: (err: any) => {
       }
     });
   }
-  
+  */
+ 
 }

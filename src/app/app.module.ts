@@ -5,6 +5,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -39,6 +40,8 @@ import { ShowFileComponent } from '../shared/components/show-file/show-file.comp
 import { InputFileComponent } from '../shared/components/input-file/input-file.component';
 import { UploaderComponent } from '../shared/components/uploader/uploader.component';
 import { SelectFieldComponent } from 'src/shared/components/select-field/select-field.component';
+import { LoginComponent } from 'core/auth/login/login.component';
+import { TokenInterceptorService } from 'core/auth/services/token.interceptor.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +56,8 @@ import { SelectFieldComponent } from 'src/shared/components/select-field/select-
     ShowFileComponent,
     InputFileComponent,
     UploaderComponent,
-    SelectFieldComponent
+    SelectFieldComponent,
+    LoginComponent
   ],
   imports: [
     CommonModule,
@@ -77,6 +81,7 @@ import { SelectFieldComponent } from 'src/shared/components/select-field/select-
     MatTableModule,
     NgxMaskDirective,
     NgxMaskPipe,
+    MatCardModule,
     QuillModule.forRoot({
       customOptions: [
         { import: 'formats/font', whitelist: ['Alumni', 'Poppins', 'Raleway'] },
@@ -88,7 +93,7 @@ import { SelectFieldComponent } from 'src/shared/components/select-field/select-
   exports: [MatChipsComponent],
   providers: [
     provideNgxMask(),
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true }
   ],
   bootstrap: [AppComponent]
 })

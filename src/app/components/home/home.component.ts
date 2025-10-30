@@ -23,6 +23,7 @@ import arquivo from '../../../assets/data/arquivo.json';
 
 import { DialogContentComponent } from '../dialog-content/dialog-content.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -49,6 +50,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroy$ = new Subject<void>();
 
   constructor(
+    private route: ActivatedRoute,
     private dialog: MatDialog,
     private comportamentoService: ComportamentoService,
     private linkStateService: LinkStateService,
@@ -58,6 +60,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
   }
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {this.titulo = params['titulo']});
     this.resetPaginador();
     this.subscreverComportamentos();
     this.subscreverAtualizacoes();

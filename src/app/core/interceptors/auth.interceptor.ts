@@ -15,6 +15,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const isPublic = req.url.includes('/api/auth/') || (req.method === 'GET' && req.url.includes('/api/atividade'));
     if (!token || isPublic) {
       return next.handle(req);
+    } else {
     }
     const authReq = req.clone({
       setHeaders: { Authorization: `Bearer ${token}` }

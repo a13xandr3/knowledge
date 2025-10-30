@@ -164,3 +164,36 @@ ng test
 - Os ícones de arquivos provêm do Font Awesome e a lista completa de ícones de tipos de arquivo (PDF, Word, Excel etc.) pode ser consultada na documentação【416792451111308†L790-L811】.
 - O uso de `BehaviorSubject` no `LinkStateService` assegura que novos componentes recebam sempre o valor mais recente assim que se inscrevem【719983014719284†L203-L227】.
 - O token JWT de autenticação é armazenado no `localStorage` pelo `LoginService` e utilizado dinamicamente pelo `FileApiService` e `HomeService` para autenticar as requisições HTTP.
+
+# 🔐 Autenticação 2FA - Angular + Java
+
+### Fluxo
+1. O usuário preenche email e senha.
+2. O Angular valida os campos e gera hash SHA-256 local.
+3. O backend valida credenciais e dispara o 2FA (TOTP).
+4. O usuário insere o código do Authenticator.
+5. Após verificação, o sistema gera token JWT e redireciona ao dashboard.
+
+### Segurança
+- Senha nunca trafega em texto puro.
+- TOTP compatível com Google/Microsoft Authenticator.
+- JWT armazena sessão temporária (expiração configurável).
+
+### Testes
+```bash
+ng test --code-coverage
+
+# 🔐 Token Lifecycle Management
+
+### Duração
+- JWT: 15 minutos
+- Refresh Token: 7 dias
+
+### Mecanismos
+1. O token é validado localmente pelo front via `exp` claim.
+2. O `TokenInterceptor` adiciona o token a cada requisição e redireciona para `/login` se estiver expirado.
+3. O `AuthGuard` impede acesso a rotas protegidas.
+4. (Opcional) O `refreshToken()` renova automaticamente tokens próximos da expiração.
+
+### Configuração backend (Java)
+`jwt.expiration=900000  # 15 minutos`
