@@ -1,2 +1,5 @@
 <router-outlet></router-outlet>
-<app-footer></app-footer>
+
+<div *ngIf="currentRoute !== '/'">
+    <app-footer></app-footer>
+</div>

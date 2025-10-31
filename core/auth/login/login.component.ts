@@ -41,33 +41,13 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (this.loginForm.invalid) return;
-
     const username = this.loginForm.value.email!;
     const passwordHash = CryptoJS.SHA256(this.loginForm.value.password!).toString(CryptoJS.enc.Hex);
-
     const credentials = { username, password: passwordHash };
-
     this.tokenStorage.setCredentials(credentials);
-
     this.auth.login(credentials).subscribe({
       next: () => this.router.navigate(['/home'], { queryParams: { titulo: this.titulo  }}),
       error: (err) => this.snackService.mostrarMensagem('Login e/ou Senha incorreto', 'Fechar')
-    });
-  }
-
-  onSubmit_() {
-    if (this.loginForm.invalid) return;
-
-    const hashedPassword = SHA256(this.password?.value!).toString(enc.Hex);
-
-    const payload = {
-      username: this.email?.value!,
-      password: hashedPassword,
-    };
-
-    this.auth.login({username: payload.username, password: payload.password}).subscribe({
-      next: () => this.router.navigate(['/home']),
-      error: (err: any) => console.error('Falha no login:', err)
     });
   }
 
@@ -77,4 +57,5 @@ export class LoginComponent {
       error: (err: any) => console.error('Erro no 2FA:', err),
     });
   }
+
 }

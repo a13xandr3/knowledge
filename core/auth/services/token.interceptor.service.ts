@@ -58,33 +58,25 @@ export class TokenInterceptorService implements HttpInterceptor {
 
   // Regenera token usando credenciais armazenadas
   private handleTokenRefresh(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
     this.isRefreshing = true;
-
     const creds = this.tokenStorage.getCredentials();
-
     if (!creds) {
       console.warn('[Interceptor] Nenhuma credencial salva — redirecionando para login');
       this.tokenStorage.clear();
       this.router.navigate(['/login']);
       return throwError(() => new Error('Sem credenciais para renovar token'));
     }
-
     return this.auth.login(creds).pipe(
-
       switchMap((response: any) => {
         this.isRefreshing = false;
         const newToken = response.token;
         this.tokenStorage.setToken(newToken);
-
         const clonedReq = req.clone({
           setHeaders: { Authorization: `Bearer ${newToken}` }
         });
-
         console.log('[Interceptor] Token renovado — reexecutando requisição');
         return next.handle(clonedReq);
       }),
-      
       catchError(err => {
         this.isRefreshing = false;
         console.error('[Interceptor] Falha ao renovar token', err);
@@ -92,7 +84,6 @@ export class TokenInterceptorService implements HttpInterceptor {
         this.router.navigate(['/login']);
         return throwError(() => err);
       })
-
     );
   }
 

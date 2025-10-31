@@ -30,8 +30,6 @@ import { DialogContentComponent } from './components/dialog-content/dialog-conte
 import { QuillModule } from 'ngx-quill';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
-import { AuthInterceptor } from './core/interceptors/auth.interceptor';
-
 import { MatChipsComponent } from '../shared/components/mat-chips/mat-chips.component';
 import { QuillComponent } from '../shared/components/quill/quill.component';
 import { DurationPipe } from '../shared/pipe/duration.pipe';
