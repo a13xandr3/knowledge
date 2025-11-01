@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { catchError, from, of, switchMap, tap } from 'rxjs';
+
 import { AuthService } from '../services/auth.service';
 import { TwofaService } from '../services/twofa.service';
-import { Router } from '@angular/router';
-import { SHA256, enc } from 'crypto-js';
 import { TokenStorageService } from '../services/token-storage.service';
-import * as CryptoJS from 'crypto-js';
+import { CryptoService } from '../services/crypto.service';
+
 import { SnackService } from 'src/shared/services/snack.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -22,6 +26,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private auth: AuthService,
     private tokenStorage: TokenStorageService,
+    private cryptoService: CryptoService,
     private twofa: TwofaService,
     private router: Router,
     private snackService: SnackService
@@ -42,15 +47,31 @@ export class LoginComponent {
   onSubmit(): void {
     if (this.loginForm.invalid) return;
     const username = this.loginForm.value.email!;
-    const passwordHash = CryptoJS.SHA256(this.loginForm.value.password!).toString(CryptoJS.enc.Hex);
-    const credentials = { username, password: passwordHash };
-    this.tokenStorage.setCredentials(credentials);
-    this.auth.login(credentials).subscribe({
-      next: () => this.router.navigate(['/home'], { queryParams: { titulo: this.titulo  }}),
-      error: (err) => this.snackService.mostrarMensagem('Login e/ou Senha incorreto', 'Fechar')
-    });
+    const password = this.loginForm.value.password!;
+    // Gera o hash da senha e encadeia o login de forma reativa
+    from(this.cryptoService.cryptoHashPassword(password))
+      .pipe(
+        switchMap((passwordHash) => {
+          const credentials = { username, password: passwordHash };
+          // Salva as credenciais criptografadas no localStorage
+          return this.tokenStorage.setCredentials(credentials).pipe(
+            switchMap(() => this.auth.login(credentials))
+          );
+        }),
+        tap(() =>
+          this.router.navigate(['/home'], {
+            queryParams: { titulo: this.titulo }
+          })
+        ),
+        catchError((err) => {
+          this.snackService.mostrarMensagem('Login e/ou Senha incorreto', 'Fechar');
+          console.error('[Login Error]', err);
+          return of(null);
+        })
+      )
+      .subscribe();
   }
-
+  
   verify2fa() {
     this.twofa.verify(this.email?.value!, this.twofaCode).subscribe({
       next: () => this.router.navigate(['/home']),
