@@ -35,27 +35,30 @@
             Senha deve ter no mínimo 8 caracteres, letras maiúsculas, minúsculas, números e caracteres especiais.
           </mat-error>
         </mat-form-field>
-
-        <button type="submit" mat-raised-button color="primary" class="login-btn" [disabled]="loginForm.invalid">Entrar</button>
-      </form>
-
-      <!--
-      <form *ngIf="step2fa" (ngSubmit)="verify2fa()" class="login-form-2fa">
+        
+        <!--form *ngIf="step2fa" (ngSubmit)="verify2fa()" class="login-form-2fa"-->
         <mat-form-field appearance="fill" class="input-field">
           <mat-label>Código do Authenticator</mat-label>
           <input
-            matInput
-            [(ngModel)]="twofaCode"
-            name="twofaCode"
-            maxlength="6"
-            required
-            placeholder="xxxxxx"
-            aria-label="Código de autenticação"
+          matInput
+          type="text"
+          formControlName="totp"
+          inputmode="numeric"
+          name="totp"
+          maxlength="6"
+          pattern="\d*"
+          placeholder="Codigo TOTP"
+          aria-label="Código de autenticação"
+          required
           />
         </mat-form-field>
-        <button type="button" mat-raised-button color="accent" class="login-btn">Verificar</button>
+        
+        <button type="submit" mat-raised-button color="primary" class="login-btn" [disabled]="loginForm.invalid">Entrar</button>
+        
+        <!--button type="button" mat-raised-button color="accent" class="login-btn">Verificar</button-->
+      
       </form>
-    -->      
+
     </mat-card-content>
 
     <mat-card-footer class="login-footer">

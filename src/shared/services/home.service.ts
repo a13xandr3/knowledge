@@ -10,11 +10,11 @@ const token = localStorage.getItem('token');
   providedIn: 'root'
 })
 export class HomeService {
-  private url = 'http://localhost:8081/api/atividade';
-  private urlCategorias = 'http://localhost:8081/api/atividade/categorias';
-  private urlTags = 'http://localhost:8081/api/atividade/tags';
-  private urlSearchCategoria = 'http://localhost:8081/api/atividade';
-  private urlBrowser = 'http://localhost:8081/proxy';
+  private url = 'http://localhost:8080/api/atividade';
+  private urlCategorias = 'http://localhost:8080/api/atividade/categorias';
+  private urlTags = 'http://localhost:8080/api/atividade/tags';
+  private urlSearchCategoria = 'http://localhost:8080/api/atividade';
+  private urlBrowser = 'http://localhost:8080/proxy';
   constructor(
     private http: HttpClient,
   ) { }

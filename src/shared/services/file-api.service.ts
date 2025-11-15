@@ -14,7 +14,7 @@ import { PreviewItem } from '../components/input-file/input-file.component';
   providedIn: 'root'
 })
 export class FileApiService {
-  private url = 'http://localhost:8081';
+  private url = 'http://localhost:8080';
   private readonly base = '/api/files';
 
   constructor(private http: HttpClient) {}

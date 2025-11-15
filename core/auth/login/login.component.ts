@@ -35,6 +35,7 @@ export class LoginComponent {
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)]],
+    totp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
   });
 
   get email() {
@@ -45,15 +46,32 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
+    debugger;
     if (this.loginForm.invalid) return;
+    
     const username = this.loginForm.value.email!;
     const password = this.loginForm.value.password!;
-    // Gera o hash da senha e encadeia o login de forma reativa
+    const totp = this.loginForm.value.totp!;
+
+    this.auth.login({ username, password, totp }).pipe(
+      tap(() =>
+        this.router.navigate(['/home'], {
+          queryParams: { titulo: this.titulo }
+        })
+      ),
+      catchError((err) => {
+        this.snackService.mostrarMensagem('Login e/ou Senha incorreto', 'Fechar');
+        console.error('[Login Error]', err);
+        return of(null);
+      })
+    ).subscribe();
+
+    /*
     from(this.cryptoService.cryptoHashPassword(password))
       .pipe(
         switchMap((passwordHash) => {
+          debugger;
           const credentials = { username, password: passwordHash };
-          // Salva as credenciais criptografadas no localStorage
           return this.tokenStorage.setCredentials(credentials).pipe(
             switchMap(() => this.auth.login(credentials))
           );
@@ -70,13 +88,16 @@ export class LoginComponent {
         })
       )
       .subscribe();
+    */
   }
   
+  /*
   verify2fa() {
     this.twofa.verify(this.email?.value!, this.twofaCode).subscribe({
       next: () => this.router.navigate(['/home']),
       error: (err: any) => console.error('Erro no 2FA:', err),
     });
   }
+  */
 
 }

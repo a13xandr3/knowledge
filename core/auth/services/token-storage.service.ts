@@ -24,6 +24,7 @@ export class TokenStorageService {
   }
   /** Guarda credenciais criptografadas */
   setCredentials(creds: LoginPayload): Observable<void> {
+    debugger
     return from(this.cryptoService.cryptoToken(JSON.stringify(creds))).pipe(
       map((cypher) => {
         localStorage.setItem(this.CREDS_KEY, cypher);

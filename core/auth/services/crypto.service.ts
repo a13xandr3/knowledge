@@ -42,6 +42,7 @@ export class CryptoService {
    * FUNÇÃO DE HASH (SHA-256)
    * ============================ */
   async cryptoHashPassword(password: string): Promise<string> {
+    debugger;
     const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
     return Array.from(new Uint8Array(hashBuffer))
       .map(b => b.toString(16).padStart(2, '0'))
